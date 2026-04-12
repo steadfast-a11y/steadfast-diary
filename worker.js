@@ -90,6 +90,7 @@ const HTML = `<!DOCTYPE html>
     .completed-at { font-size: 11px; color: var(--green); font-weight: 600; }
     .journal-toggle { font-size: 11px; color: var(--light-blue); cursor: pointer; text-decoration: underline; background: none; border: none; padding: 0; cursor: pointer; }
     .journal-toggle:hover { color: var(--blue); }
+    .journal-toggle.has-journal { font-weight: 700; color: var(--blue); }
     .word-count { font-size: 11px; color: var(--gray); }
 
     /* MILESTONE */
@@ -288,7 +289,7 @@ function render() {
         if (checked && task.completedAt) {
           html += '<span class="completed-at">✓ Completed ' + formatDate(task.completedAt) + '</span>';
         }
-        html += '<button class="journal-toggle" onclick="event.stopPropagation();toggleJournal(&apos;' + taskId + '&apos;)">' +
+        html += '<button class="journal-toggle' + (hasJournal ? ' has-journal' : '') + '" onclick="event.stopPropagation();toggleJournal(&apos;' + taskId + '&apos;)">' +
           (hasJournal ? '📝 View journal (' + wordCount + ' words)' : '+ Add journal note') + '</button>';
         html += '</div></div></div>';
 
