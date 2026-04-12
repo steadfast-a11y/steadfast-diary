@@ -805,9 +805,9 @@ const LOGIN_HTML = `<!DOCTYPE html>
     h1 { font-size: 22px; font-weight: 700; color: #1B2A4A; margin-bottom: 6px; }
     .sub { font-size: 14px; color: #666; margin-bottom: 32px; }
     label { font-size: 13px; font-weight: 600; color: #1B2A4A; display: block; margin-bottom: 6px; }
-    input[type="password"] { width: 100%; padding: 11px 14px; border: 1.5px solid #D8DEE9; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.15s; }
-    input[type="password"]:focus { border-color: #4A78C4; }
-    button { width: 100%; margin-top: 16px; background: #1B2A4A; color: white; border: none; padding: 13px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+    input[type="text"], input[type="password"] { width: 100%; padding: 11px 14px; border: 1.5px solid #D8DEE9; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.15s; margin-bottom: 16px; }
+    input[type="text"]:focus, input[type="password"]:focus { border-color: #4A78C4; }
+    button { width: 100%; margin-top: 4px; background: #1B2A4A; color: white; border: none; padding: 13px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
     button:hover { background: #2E5090; }
     .error { margin-top: 12px; font-size: 13px; color: #C0392B; text-align: center; min-height: 18px; }
   </style>
@@ -816,10 +816,12 @@ const LOGIN_HTML = `<!DOCTYPE html>
   <div class="card">
     <div class="logo">Steadfast Accessibility LLC</div>
     <h1>Learning Diary</h1>
-    <div class="sub">Enter your password to continue</div>
+    <div class="sub">Sign in to continue</div>
     <form method="POST" action="/diary/login">
+      <label for="un">Username</label>
+      <input type="text" id="un" name="username" autofocus autocomplete="username" />
       <label for="pw">Password</label>
-      <input type="password" id="pw" name="password" autofocus autocomplete="current-password" />
+      <input type="password" id="pw" name="password" autocomplete="current-password" />
       <button type="submit">Sign In</button>
       <div class="error">__ERROR__</div>
     </form>
@@ -833,40 +835,39 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
+    // ── Credentials ──────────────────────────────────────────────────────────
+    const DIARY_USERNAME = 'a11y';
+    const DIARY_PASSWORD = 'a11y';
+    const SESSION_COOKIE_VALUE = 'steadfast-diary-authenticated';
+
     // ── Cookie auth check ────────────────────────────────────────────────────
     function isAuthenticated() {
       const cookieHeader = request.headers.get('Cookie') || '';
       const match = cookieHeader.match(/diary_auth=([^;]+)/);
       if (!match) return false;
-      return match[1] === env.AUTH_TOKEN;
+      return match[1] === SESSION_COOKIE_VALUE;
     }
 
-    function authCookieHeader(token) {
+    function authCookieHeader() {
       // 90-day persistent cookie
-      return `diary_auth=${token}; Path=/diary; HttpOnly; Secure; SameSite=Lax; Max-Age=${60 * 60 * 24 * 90}`;
+      return `diary_auth=${SESSION_COOKIE_VALUE}; Path=/diary; HttpOnly; Secure; SameSite=Lax; Max-Age=${60 * 60 * 24 * 90}`;
     }
 
-    // ── API bearer auth (for JS fetch calls) ─────────────────────────────────
-    function checkBearerAuth() {
-      const header = request.headers.get('Authorization') || '';
-      const token = header.replace(/^Bearer\s+/i, '').trim();
-      return token === env.AUTH_TOKEN;
-    }
-
-    // ── POST /diary/login — handle password form submission ──────────────────
+    // ── POST /diary/login — handle login form submission ─────────────────────
     if (path === '/diary/login' && request.method === 'POST') {
       const body = await request.formData();
-      const password = body.get('password') || '';
-      if (password === env.AUTH_TOKEN) {
+      const username = (body.get('username') || '').trim();
+      const password = (body.get('password') || '').trim();
+      if (username === DIARY_USERNAME && password === DIARY_PASSWORD) {
         return new Response('', {
           status: 302,
           headers: {
             'Location': '/diary',
-            'Set-Cookie': authCookieHeader(env.AUTH_TOKEN),
+            'Set-Cookie': authCookieHeader(),
           }
         });
       }
-      return new Response(LOGIN_HTML.replace('__ERROR__', 'Incorrect password — try again.'), {
+      return new Response(LOGIN_HTML.replace('__ERROR__', 'Incorrect username or password — try again.'), {
         status: 401,
         headers: { 'Content-Type': 'text/html; charset=UTF-8' }
       });
@@ -878,7 +879,7 @@ export default {
         status: 302,
         headers: {
           'Location': '/diary/login',
-          'Set-Cookie': 'diary_auth=; Path=/diary; HttpOnly; Secure; Max-Age=0',
+          'Set-Cookie': `diary_auth=; Path=/diary; HttpOnly; Secure; Max-Age=0`,
         }
       });
     }
