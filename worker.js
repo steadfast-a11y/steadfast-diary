@@ -392,7 +392,6 @@ function updateWordCount(taskId) {
 }
 
 async function saveJournal(taskId) {
-  if (!authToken) return;
   const ta = document.getElementById('jtext-' + taskId);
   if (!ta) return;
   const journal = ta.value;
