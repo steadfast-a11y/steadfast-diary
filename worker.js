@@ -279,23 +279,23 @@ function render() {
         const wordCount = task.journal ? task.journal.trim().split(/\\s+/).filter(Boolean).length : 0;
 
         html += '<div class="task-item" id="item-' + taskId + '">';
-        html += '<div class="task-row" onclick="toggleJournal(\'' + taskId + '\')">';
+        html += '<div class="task-row" onclick="toggleJournal(&apos;' + taskId + '&apos;)">';
         html += '<div class="task-check"><input type="checkbox" ' + (checked ? 'checked' : '') +
-          ' onclick="event.stopPropagation();toggleTask(\'' + taskId + '\', this)" /></div>';
+          ' onclick="event.stopPropagation();toggleTask(&apos;' + taskId + '&apos;, this)" /></div>';
         html += '<div class="task-body">';
         html += '<div class="task-text' + (checked ? ' completed-text' : '') + '">' + escHtml(task.description) + '</div>';
         html += '<div class="task-meta">';
         if (checked && task.completedAt) {
           html += '<span class="completed-at">✓ Completed ' + formatDate(task.completedAt) + '</span>';
         }
-        html += '<button class="journal-toggle" onclick="event.stopPropagation();toggleJournal(\'' + taskId + '\')">' +
+        html += '<button class="journal-toggle" onclick="event.stopPropagation();toggleJournal(&apos;' + taskId + '&apos;)">' +
           (hasJournal ? '📝 View journal (' + wordCount + ' words)' : '+ Add journal note') + '</button>';
         html += '</div></div></div>';
 
         // Journal area
         html += '<div class="journal-area" id="journal-' + taskId + '">';
         html += '<textarea class="journal-textarea" id="jtext-' + taskId + '" placeholder="What did you learn? What surprised you? Notes for future reference…" ' +
-          'oninput="scheduleJournalSave(\'' + taskId + '\')">' + escHtml(task.journal || '') + '</textarea>';
+          'oninput="scheduleJournalSave(&apos;' + taskId + '&apos;)">' + escHtml(task.journal || '') + '</textarea>';
         html += '<div class="journal-footer">';
         html += '<span class="save-indicator" id="saved-' + taskId + '">✓ Saved</span>';
         html += '<span class="word-count" id="wc-' + taskId + '">' + (wordCount > 0 ? wordCount + ' words' : '') + '</span>';
