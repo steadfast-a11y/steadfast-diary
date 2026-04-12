@@ -117,6 +117,12 @@ const HTML = `<!DOCTYPE html>
     .status-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
     .status-table tr:last-child td { border-bottom: none; }
 
+    /* PUSH BUTTON + CARRIED-OVER */
+    .push-btn { background: none; border: 1px solid var(--border); color: var(--gray); font-size: 11px; padding: 2px 8px; border-radius: 6px; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; white-space: nowrap; }
+    .push-btn:hover { background: #EBF0FA; color: var(--navy); border-color: var(--light-blue); }
+    .task-item.carried-over { border-left: 3px solid var(--light-blue); }
+    .carried-over-badge { display: inline-block; font-size: 10px; font-weight: 700; color: var(--blue); background: #EBF0FA; border-radius: 4px; padding: 1px 6px; margin-right: 6px; letter-spacing: 0.03em; vertical-align: middle; }
+
     /* FOOTER */
     footer { background: var(--navy); color: rgba(255,255,255,0.5); text-align: center; padding: 24px 40px; font-size: 13px; }
     footer strong { color: rgba(255,255,255,0.8); }
@@ -272,39 +278,75 @@ function render() {
 
       html += '<div class="category-label">' + escHtml(cat.name) + '</div>';
 
-      cat.taskIds.forEach(taskId => {
+      function renderTask(taskId, carriedFromWeek) {
         const task = tasks[taskId];
-        if (!task) return;
+        if (!task) return '';
+        // Skip tasks that have been pushed away (hide from their original week)
+        if (!carriedFromWeek && task.pushedToWeek) return '';
+
         const checked = task.completed;
         const hasJournal = task.journal && task.journal.trim().length > 0;
         const wordCount = task.journal ? task.journal.trim().split(/\\s+/).filter(Boolean).length : 0;
+        const isLastWeek = week.weekNum >= 15;
 
-        html += '<div class="task-item" id="item-' + taskId + '">';
-        html += '<div class="task-row" onclick="toggleJournal(&apos;' + taskId + '&apos;)">';
-        html += '<div class="task-check"><input type="checkbox" ' + (checked ? 'checked' : '') +
+        let t = '';
+        t += '<div class="task-item' + (carriedFromWeek ? ' carried-over' : '') + '" id="item-' + taskId + '">';
+        t += '<div class="task-row" onclick="toggleJournal(&apos;' + taskId + '&apos;)">';
+        t += '<div class="task-check"><input type="checkbox" ' + (checked ? 'checked' : '') +
           ' onclick="event.stopPropagation();toggleTask(&apos;' + taskId + '&apos;, this)" /></div>';
-        html += '<div class="task-body">';
-        html += '<div class="task-text' + (checked ? ' completed-text' : '') + '">' + escHtml(task.description) + '</div>';
-        html += '<div class="task-meta">';
-        if (checked && task.completedAt) {
-          html += '<span class="completed-at">✓ Completed ' + formatDate(task.completedAt) + '</span>';
+        t += '<div class="task-body">';
+        t += '<div class="task-text' + (checked ? ' completed-text' : '') + '">';
+        if (carriedFromWeek) {
+          t += '<span class="carried-over-badge">↪ from Wk ' + carriedFromWeek + '</span>';
         }
-        html += '<button class="journal-toggle' + (hasJournal ? ' has-journal' : '') + '" onclick="event.stopPropagation();toggleJournal(&apos;' + taskId + '&apos;)">' +
+        t += escHtml(task.description) + '</div>';
+        t += '<div class="task-meta">';
+        if (checked && task.completedAt) {
+          t += '<span class="completed-at">✓ Completed ' + formatDate(task.completedAt) + '</span>';
+        }
+        t += '<button class="journal-toggle' + (hasJournal ? ' has-journal' : '') + '" onclick="event.stopPropagation();toggleJournal(&apos;' + taskId + '&apos;)">' +
           (hasJournal ? '📝 View journal (' + wordCount + ' words)' : '+ Add journal note') + '</button>';
-        html += '</div></div></div>';
+        if (!isLastWeek) {
+          t += '<button class="push-btn" onclick="event.stopPropagation();pushTask(&apos;' + taskId + '&apos;, ' + week.weekNum + ')">↷ Push to next week</button>';
+        }
+        t += '</div></div></div>';
 
         // Journal area
-        html += '<div class="journal-area" id="journal-' + taskId + '">';
-        html += '<textarea class="journal-textarea" id="jtext-' + taskId + '" placeholder="What did you learn? What surprised you? Notes for future reference…" ' +
+        t += '<div class="journal-area" id="journal-' + taskId + '">';
+        t += '<textarea class="journal-textarea" id="jtext-' + taskId + '" placeholder="What did you learn? What surprised you? Notes for future reference…" ' +
           'oninput="scheduleJournalSave(&apos;' + taskId + '&apos;)">' + escHtml(task.journal || '') + '</textarea>';
-        html += '<div class="journal-footer">';
-        html += '<span class="save-indicator" id="saved-' + taskId + '">✓ Saved</span>';
-        html += '<span class="word-count" id="wc-' + taskId + '">' + (wordCount > 0 ? wordCount + ' words' : '') + '</span>';
+        t += '<div class="journal-footer">';
+        t += '<span class="save-indicator" id="saved-' + taskId + '">✓ Saved</span>';
+        t += '<span class="word-count" id="wc-' + taskId + '">' + (wordCount > 0 ? wordCount + ' words' : '') + '</span>';
         if (task.journalUpdatedAt) {
-          html += '<span class="journal-updated">Last updated ' + formatDate(task.journalUpdatedAt) + '</span>';
+          t += '<span class="journal-updated">Last updated ' + formatDate(task.journalUpdatedAt) + '</span>';
         }
-        html += '</div></div>';
-        html += '</div>';
+        t += '</div></div>';
+        t += '</div>';
+        return t;
+      }
+
+      cat.taskIds.forEach(taskId => {
+        html += renderTask(taskId, null);
+      });
+
+      // Inject tasks pushed into this week/category from a previous week
+      const catName = cat.name;
+      Object.keys(tasks).forEach(taskId => {
+        const t = tasks[taskId];
+        if (!t || !t.pushedToWeek) return;
+        if (t.pushedToWeek !== week.weekNum) return;
+        // Find which category this task originally belongs to
+        let originalCatName = null;
+        allData.weeks.forEach(w => {
+          w.categories.forEach(c => {
+            if (c.taskIds.includes(taskId)) originalCatName = c.name;
+          });
+        });
+        if (originalCatName !== catName) return;
+        // Don't double-render if it's already in this week's native taskIds
+        if (cat.taskIds.includes(taskId)) return;
+        html += renderTask(taskId, t.pushedFromWeek || '?');
       });
 
       html += '</div>'; // category-group
@@ -413,6 +455,30 @@ async function saveJournal(taskId) {
     }
   } catch(e) {
     console.error('Journal save failed:', e);
+  }
+}
+
+// ─── Push task to next week ───────────────────────────────────────────────────
+async function pushTask(taskId, currentWeekNum) {
+  const targetWeek = currentWeekNum + 1;
+  try {
+    const res = await fetch('/diary/api/push/' + encodeURIComponent(taskId), {
+      method: 'PUT',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pushedToWeek: targetWeek, pushedFromWeek: currentWeekNum })
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const updated = await res.json();
+    if (allData.tasks[taskId]) {
+      allData.tasks[taskId].pushedToWeek = updated.pushedToWeek;
+      allData.tasks[taskId].pushedFromWeek = updated.pushedFromWeek;
+    }
+    // Full re-render to reflect the change
+    renderAll(allData);
+  } catch(e) {
+    console.error('Push failed:', e);
+    alert('Could not push task — check your connection.');
   }
 }
 
@@ -921,6 +987,11 @@ export default {
     if (subpath === '/api/data' && request.method === 'GET') {
       let data = await env.DIARY_DATA.get('diary', { type: 'json' });
       if (!data) data = SEED_DATA;
+      // Backfill pushedToWeek/pushedFromWeek for existing tasks that predate the feature
+      Object.values(data.tasks).forEach(t => {
+        if (t.pushedToWeek === undefined) t.pushedToWeek = null;
+        if (t.pushedFromWeek === undefined) t.pushedFromWeek = null;
+      });
       return new Response(JSON.stringify(data), {
         headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
       });
@@ -965,6 +1036,25 @@ export default {
       });
     }
 
+    // ── PUT /diary/api/push/:taskId ──────────────────────────────────────────
+    if (subpath.startsWith('/api/push/') && request.method === 'PUT') {
+      const taskId = decodeURIComponent(subpath.slice('/api/push/'.length));
+      const body = await request.json();
+      let data = await env.DIARY_DATA.get('diary', { type: 'json' });
+      if (!data) data = JSON.parse(JSON.stringify(SEED_DATA));
+      if (!data.tasks[taskId]) {
+        return new Response(JSON.stringify({ error: 'Task not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+      }
+      const now = new Date().toISOString();
+      data.tasks[taskId].pushedToWeek = body.pushedToWeek;
+      data.tasks[taskId].pushedFromWeek = body.pushedFromWeek;
+      data.meta.lastUpdated = now;
+      await env.DIARY_DATA.put('diary', JSON.stringify(data));
+      return new Response(JSON.stringify({ ok: true, pushedToWeek: body.pushedToWeek, pushedFromWeek: body.pushedFromWeek }), {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     // ── GET /diary/api/export ────────────────────────────────────────────────
     if (subpath === '/api/export' && request.method === 'GET') {
       let data = await env.DIARY_DATA.get('diary', { type: 'json' });
@@ -983,6 +1073,11 @@ export default {
       data = JSON.parse(JSON.stringify(SEED_DATA));
       await env.DIARY_DATA.put('diary', JSON.stringify(data));
     }
+    // Backfill pushedToWeek/pushedFromWeek for existing tasks
+    Object.values(data.tasks).forEach(t => {
+      if (t.pushedToWeek === undefined) t.pushedToWeek = null;
+      if (t.pushedFromWeek === undefined) t.pushedFromWeek = null;
+    });
     // Fix all API paths to use /diary prefix
     const appHtml = HTML
       .replace(/fetch\('\/api\//g, "fetch('/diary/api/")
