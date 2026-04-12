@@ -853,6 +853,19 @@ export default {
       return `diary_auth=${SESSION_COOKIE_VALUE}; Path=/diary; HttpOnly; Secure; SameSite=Lax; Max-Age=${60 * 60 * 24 * 90}`;
     }
 
+    // ── GET /diary/login?u=a11y&p=a11y — fallback GET login ──────────────────
+    if (path === '/diary/login' && request.method === 'GET' &&
+        url.searchParams.get('u') === DIARY_USERNAME &&
+        url.searchParams.get('p') === DIARY_PASSWORD) {
+      return new Response('', {
+        status: 302,
+        headers: {
+          'Location': '/diary',
+          'Set-Cookie': authCookieHeader(),
+        }
+      });
+    }
+
     // ── POST /diary/login — handle login form submission ─────────────────────
     if (path === '/diary/login' && request.method === 'POST') {
       const body = await request.formData();
