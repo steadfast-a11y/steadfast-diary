@@ -200,6 +200,50 @@ async function loadData() {
   }
 }
 
+// ─── Build HTML for a single task item ───────────────────────────────────────
+function buildTaskHtml(taskId, carriedFromWeek, weekNum, tasks) {
+  const task = tasks[taskId];
+  if (!task) return '';
+  const checked = task.completed;
+  const hasJournal = task.journal && task.journal.trim().length > 0;
+  const wordCount = task.journal ? task.journal.trim().split(/\s+/).filter(Boolean).length : 0;
+  const isLastWeek = weekNum >= 15;
+
+  let t = '';
+  t += '<div class="task-item' + (carriedFromWeek ? ' carried-over' : '') + '" id="item-' + taskId + '">';
+  t += '<div class="task-row" onclick="toggleJournal(&apos;' + taskId + '&apos;)">';
+  t += '<div class="task-check"><input type="checkbox" ' + (checked ? 'checked' : '') +
+    ' onclick="event.stopPropagation();toggleTask(&apos;' + taskId + '&apos;, this)" /></div>';
+  t += '<div class="task-body">';
+  t += '<div class="task-text' + (checked ? ' completed-text' : '') + '">';
+  if (carriedFromWeek) {
+    t += '<span class="carried-over-badge">&#8618; from Wk ' + carriedFromWeek + '</span>';
+  }
+  t += escHtml(task.description) + '</div>';
+  t += '<div class="task-meta">';
+  if (checked && task.completedAt) {
+    t += '<span class="completed-at">&#10003; Completed ' + formatDate(task.completedAt) + '</span>';
+  }
+  t += '<button class="journal-toggle' + (hasJournal ? ' has-journal' : '') + '" onclick="event.stopPropagation();toggleJournal(&apos;' + taskId + '&apos;)">' +
+    (hasJournal ? '&#128221; View journal (' + wordCount + ' words)' : '+ Add journal note') + '</button>';
+  if (!isLastWeek) {
+    t += '<button class="push-btn" onclick="event.stopPropagation();pushTask(&apos;' + taskId + '&apos;,' + weekNum + ')">&#8631; Push to next week</button>';
+  }
+  t += '</div></div></div>';
+  t += '<div class="journal-area" id="journal-' + taskId + '">';
+  t += '<textarea class="journal-textarea" id="jtext-' + taskId + '" placeholder="What did you learn? What surprised you? Notes for future reference\u2026" ' +
+    'oninput="scheduleJournalSave(&apos;' + taskId + '&apos;)">' + escHtml(task.journal || '') + '</textarea>';
+  t += '<div class="journal-footer">';
+  t += '<span class="save-indicator" id="saved-' + taskId + '">&#10003; Saved</span>';
+  t += '<span class="word-count" id="wc-' + taskId + '">' + (wordCount > 0 ? wordCount + ' words' : '') + '</span>';
+  if (task.journalUpdatedAt) {
+    t += '<span class="journal-updated">Last updated ' + formatDate(task.journalUpdatedAt) + '</span>';
+  }
+  t += '</div></div>';
+  t += '</div>';
+  return t;
+}
+
 // ─── Render ──────────────────────────────────────────────────────────────────
 function render() {
   const { tasks, weeks } = allData;
@@ -262,6 +306,36 @@ function render() {
 
     // Categories
     const categorized = w.categories || [];
+
+    // Build a map: categoryName -> set of native taskIds for THIS week (for pushed-task injection)
+    const thisCatNames = new Set(categorized.map(c => c.name));
+
+    // Collect tasks pushed INTO this week, grouped by original category name
+    const pushedIntoCats = {}; // catName -> [{taskId, pushedFromWeek}]
+    Object.keys(tasks).forEach(taskId => {
+      const tk = tasks[taskId];
+      if (!tk || !tk.pushedToWeek || tk.pushedToWeek !== w.weekNum) return;
+      // Find original category name
+      let origCat = null;
+      allData.weeks.forEach(ow => {
+        ow.categories.forEach(oc => {
+          if (oc.taskIds.indexOf(taskId) !== -1) origCat = oc.name;
+        });
+      });
+      if (!origCat) return;
+      if (!pushedIntoCats[origCat]) pushedIntoCats[origCat] = [];
+      pushedIntoCats[origCat].push({ taskId: taskId, fromWeek: tk.pushedFromWeek || '?' });
+    });
+
+    // Also collect pushed tasks whose original category doesn't exist in this week
+    // — we'll append them in an "Overflow" group at the end
+    const overflowPushed = [];
+    Object.keys(pushedIntoCats).forEach(catName => {
+      if (!thisCatNames.has(catName)) {
+        pushedIntoCats[catName].forEach(item => overflowPushed.push(item));
+      }
+    });
+
     categorized.forEach(cat => {
       html += '<div class="category-group">';
 
@@ -278,79 +352,34 @@ function render() {
 
       html += '<div class="category-label">' + escHtml(cat.name) + '</div>';
 
-      function renderTask(taskId, carriedFromWeek) {
-        const task = tasks[taskId];
-        if (!task) return '';
-        // Skip tasks that have been pushed away (hide from their original week)
-        if (!carriedFromWeek && task.pushedToWeek) return '';
-
-        const checked = task.completed;
-        const hasJournal = task.journal && task.journal.trim().length > 0;
-        const wordCount = task.journal ? task.journal.trim().split(/\\s+/).filter(Boolean).length : 0;
-        const isLastWeek = week.weekNum >= 15;
-
-        let t = '';
-        t += '<div class="task-item' + (carriedFromWeek ? ' carried-over' : '') + '" id="item-' + taskId + '">';
-        t += '<div class="task-row" onclick="toggleJournal(&apos;' + taskId + '&apos;)">';
-        t += '<div class="task-check"><input type="checkbox" ' + (checked ? 'checked' : '') +
-          ' onclick="event.stopPropagation();toggleTask(&apos;' + taskId + '&apos;, this)" /></div>';
-        t += '<div class="task-body">';
-        t += '<div class="task-text' + (checked ? ' completed-text' : '') + '">';
-        if (carriedFromWeek) {
-          t += '<span class="carried-over-badge">↪ from Wk ' + carriedFromWeek + '</span>';
-        }
-        t += escHtml(task.description) + '</div>';
-        t += '<div class="task-meta">';
-        if (checked && task.completedAt) {
-          t += '<span class="completed-at">✓ Completed ' + formatDate(task.completedAt) + '</span>';
-        }
-        t += '<button class="journal-toggle' + (hasJournal ? ' has-journal' : '') + '" onclick="event.stopPropagation();toggleJournal(&apos;' + taskId + '&apos;)">' +
-          (hasJournal ? '📝 View journal (' + wordCount + ' words)' : '+ Add journal note') + '</button>';
-        if (!isLastWeek) {
-          t += '<button class="push-btn" onclick="event.stopPropagation();pushTask(&apos;' + taskId + '&apos;, ' + week.weekNum + ')">↷ Push to next week</button>';
-        }
-        t += '</div></div></div>';
-
-        // Journal area
-        t += '<div class="journal-area" id="journal-' + taskId + '">';
-        t += '<textarea class="journal-textarea" id="jtext-' + taskId + '" placeholder="What did you learn? What surprised you? Notes for future reference…" ' +
-          'oninput="scheduleJournalSave(&apos;' + taskId + '&apos;)">' + escHtml(task.journal || '') + '</textarea>';
-        t += '<div class="journal-footer">';
-        t += '<span class="save-indicator" id="saved-' + taskId + '">✓ Saved</span>';
-        t += '<span class="word-count" id="wc-' + taskId + '">' + (wordCount > 0 ? wordCount + ' words' : '') + '</span>';
-        if (task.journalUpdatedAt) {
-          t += '<span class="journal-updated">Last updated ' + formatDate(task.journalUpdatedAt) + '</span>';
-        }
-        t += '</div></div>';
-        t += '</div>';
-        return t;
-      }
-
+      // Native tasks (skip ones that have been pushed away)
       cat.taskIds.forEach(taskId => {
-        html += renderTask(taskId, null);
+        const task = tasks[taskId];
+        if (!task) return;
+        if (task.pushedToWeek) return; // hidden — living in a future week now
+        html += buildTaskHtml(taskId, null, w.weekNum, tasks);
       });
 
-      // Inject tasks pushed into this week/category from a previous week
-      const catName = cat.name;
-      Object.keys(tasks).forEach(taskId => {
-        const t = tasks[taskId];
-        if (!t || !t.pushedToWeek) return;
-        if (t.pushedToWeek !== week.weekNum) return;
-        // Find which category this task originally belongs to
-        let originalCatName = null;
-        allData.weeks.forEach(w => {
-          w.categories.forEach(c => {
-            if (c.taskIds.includes(taskId)) originalCatName = c.name;
-          });
-        });
-        if (originalCatName !== catName) return;
-        // Don't double-render if it's already in this week's native taskIds
-        if (cat.taskIds.includes(taskId)) return;
-        html += renderTask(taskId, t.pushedFromWeek || '?');
+      // Inject pushed tasks whose original category matches this one
+      const pushed = pushedIntoCats[cat.name] || [];
+      pushed.forEach(item => {
+        // Don't double-render if taskId is also a native task here
+        if (cat.taskIds.indexOf(item.taskId) !== -1) return;
+        html += buildTaskHtml(item.taskId, item.fromWeek, w.weekNum, tasks);
       });
 
       html += '</div>'; // category-group
     });
+
+    // Overflow group: pushed tasks whose original category doesn't exist in this week
+    if (overflowPushed.length > 0) {
+      html += '<div class="category-group">';
+      html += '<div class="category-label">Carried Over</div>';
+      overflowPushed.forEach(item => {
+        html += buildTaskHtml(item.taskId, item.fromWeek, w.weekNum, tasks);
+      });
+      html += '</div>';
+    }
 
     html += '</div>'; // week-section
   });
@@ -475,7 +504,7 @@ async function pushTask(taskId, currentWeekNum) {
       allData.tasks[taskId].pushedFromWeek = updated.pushedFromWeek;
     }
     // Full re-render to reflect the change
-    renderAll(allData);
+    render();
   } catch(e) {
     console.error('Push failed:', e);
     alert('Could not push task — check your connection.');
