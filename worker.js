@@ -42,13 +42,9 @@ const HTML = `<!DOCTYPE html>
     .progress-label { font-size: 14px; opacity: 0.9; white-space: nowrap; }
     .current-week-badge { background: var(--amber); color: #1a1000; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 12px; letter-spacing: 0.04em; }
 
-    /* AUTH BANNER */
-    #auth-banner { background: var(--amber-bg); border-bottom: 2px solid var(--amber-border); padding: 10px 40px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-    #auth-banner label { font-size: 13px; font-weight: 600; color: var(--amber); }
-    #auth-input { font-size: 13px; padding: 5px 10px; border: 1px solid var(--amber-border); border-radius: 6px; width: 280px; font-family: monospace; }
-    #auth-btn { background: var(--amber); color: white; border: none; padding: 5px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
-    #auth-status { font-size: 12px; color: var(--gray); }
-    #auth-banner.hidden { display: none; }
+    /* LOGOUT LINK */
+    .logout-link { font-size: 12px; color: rgba(255,255,255,0.45); text-decoration: none; margin-left: 12px; }
+    .logout-link:hover { color: rgba(255,255,255,0.75); }
 
     /* NAV */
     nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 10px 40px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow-x: auto; }
@@ -150,16 +146,10 @@ const HTML = `<!DOCTYPE html>
       </div>
       <div class="progress-label" id="overall-label">Loading…</div>
       <div class="current-week-badge" id="current-week-badge">Week —</div>
+      <a href="/diary/logout" class="logout-link">Sign out</a>
     </div>
   </div>
 </header>
-
-<div id="auth-banner">
-  <label for="auth-input">🔒 Enter access token to enable saving:</label>
-  <input type="password" id="auth-input" placeholder="Paste your token here" autocomplete="off" />
-  <button id="auth-btn">Unlock</button>
-  <span id="auth-status"></span>
-</div>
 
 <nav>
   <div class="nav-inner" id="week-nav">
@@ -183,33 +173,6 @@ const HTML = `<!DOCTYPE html>
 const START_DATE = new Date('2026-04-05T00:00:00');
 const TOTAL_WEEKS = 15;
 
-// ─── Auth ────────────────────────────────────────────────────────────────────
-let authToken = sessionStorage.getItem('diary_token') || '';
-
-function initAuth() {
-  const banner = document.getElementById('auth-banner');
-  const btn = document.getElementById('auth-btn');
-  const input = document.getElementById('auth-input');
-  const status = document.getElementById('auth-status');
-  if (authToken) { banner.classList.add('hidden'); return; }
-  btn.addEventListener('click', async () => {
-    const val = input.value.trim();
-    if (!val) return;
-    // Quick check — try a dummy PUT
-    const res = await fetch('/api/task/__ping', {
-      method: 'PUT',
-      headers: { 'Authorization': 'Bearer ' + val, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ completed: false })
-    });
-    if (res.status === 401) { status.textContent = '✗ Invalid token'; status.style.color = '#C0392B'; return; }
-    authToken = val;
-    sessionStorage.setItem('diary_token', val);
-    banner.classList.add('hidden');
-    status.textContent = '';
-  });
-  input.addEventListener('keydown', e => { if (e.key === 'Enter') btn.click(); });
-}
-
 // ─── Current Week ─────────────────────────────────────────────────────────────
 function getCurrentWeek() {
   const now = new Date();
@@ -222,7 +185,7 @@ let allData = null;
 
 async function loadData() {
   try {
-    allData = window.__DIARY_DATA__ || await fetch('/api/data').then(r => r.json());
+    allData = window.__DIARY_DATA__ || await fetch('/diary/api/data').then(r => r.json());
     render();
   } catch(e) {
     document.getElementById('main-content').innerHTML =
@@ -372,12 +335,10 @@ async function toggleTask(taskId, checkbox) {
   }
   refreshStats();
 
-  if (!authToken) { alert('Please enter your access token at the top of the page to save changes.'); checkbox.checked = !completed; task.completed = !completed; return; }
-
   try {
-    const res = await fetch('/api/task/' + encodeURIComponent(taskId), {
+    const res = await fetch('/diary/api/task/' + encodeURIComponent(taskId), {
       method: 'PUT',
-      headers: { 'Authorization': 'Bearer ' + authToken, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ completed })
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -437,9 +398,9 @@ async function saveJournal(taskId) {
   const savedEl = document.getElementById('saved-' + taskId);
 
   try {
-    const res = await fetch('/api/journal/' + encodeURIComponent(taskId), {
+    const res = await fetch('/diary/api/journal/' + encodeURIComponent(taskId), {
       method: 'PUT',
-      headers: { 'Authorization': 'Bearer ' + authToken, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ journal })
     });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -471,7 +432,7 @@ function refreshStats() {
 
 // ─── Export ──────────────────────────────────────────────────────────────────
 async function exportData() {
-  const res = await fetch('/api/export');
+  const res = await fetch('/diary/api/export');
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -494,7 +455,6 @@ function formatDate(iso) {
 }
 
 // ─── Boot ────────────────────────────────────────────────────────────────────
-initAuth();
 loadData();
 </script>
 </body>
@@ -830,21 +790,119 @@ const SEED_DATA = {
 SEED_DATA.meta.totalTasks = Object.keys(SEED_DATA.tasks).length;
 SEED_DATA.meta.completedTasks = Object.values(SEED_DATA.tasks).filter(t => t.completed).length;
 
+// ─── Password page HTML ────────────────────────────────────────────────────────
+const LOGIN_HTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Steadfast Accessibility — Sign In</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: #1B2A4A; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .card { background: white; border-radius: 14px; padding: 44px 40px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .logo { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #4A78C4; font-weight: 700; margin-bottom: 10px; }
+    h1 { font-size: 22px; font-weight: 700; color: #1B2A4A; margin-bottom: 6px; }
+    .sub { font-size: 14px; color: #666; margin-bottom: 32px; }
+    label { font-size: 13px; font-weight: 600; color: #1B2A4A; display: block; margin-bottom: 6px; }
+    input[type="password"] { width: 100%; padding: 11px 14px; border: 1.5px solid #D8DEE9; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.15s; }
+    input[type="password"]:focus { border-color: #4A78C4; }
+    button { width: 100%; margin-top: 16px; background: #1B2A4A; color: white; border: none; padding: 13px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+    button:hover { background: #2E5090; }
+    .error { margin-top: 12px; font-size: 13px; color: #C0392B; text-align: center; min-height: 18px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">Steadfast Accessibility LLC</div>
+    <h1>Learning Diary</h1>
+    <div class="sub">Enter your password to continue</div>
+    <form method="POST" action="/diary/login">
+      <label for="pw">Password</label>
+      <input type="password" id="pw" name="password" autofocus autocomplete="current-password" />
+      <button type="submit">Sign In</button>
+      <div class="error">__ERROR__</div>
+    </form>
+  </div>
+</body>
+</html>`;
+
 // ─── Worker ────────────────────────────────────────────────────────────────────
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // ── Auth helper ──────────────────────────────────────────────────────────
-    function checkAuth() {
+    // ── Cookie auth check ────────────────────────────────────────────────────
+    function isAuthenticated() {
+      const cookieHeader = request.headers.get('Cookie') || '';
+      const match = cookieHeader.match(/diary_auth=([^;]+)/);
+      if (!match) return false;
+      return match[1] === env.AUTH_TOKEN;
+    }
+
+    function authCookieHeader(token) {
+      // 90-day persistent cookie
+      return `diary_auth=${token}; Path=/diary; HttpOnly; Secure; SameSite=Lax; Max-Age=${60 * 60 * 24 * 90}`;
+    }
+
+    // ── API bearer auth (for JS fetch calls) ─────────────────────────────────
+    function checkBearerAuth() {
       const header = request.headers.get('Authorization') || '';
       const token = header.replace(/^Bearer\s+/i, '').trim();
       return token === env.AUTH_TOKEN;
     }
 
-    // ── GET /api/data ────────────────────────────────────────────────────────
-    if (path === '/api/data' && request.method === 'GET') {
+    // ── POST /diary/login — handle password form submission ──────────────────
+    if (path === '/diary/login' && request.method === 'POST') {
+      const body = await request.formData();
+      const password = body.get('password') || '';
+      if (password === env.AUTH_TOKEN) {
+        return new Response('', {
+          status: 302,
+          headers: {
+            'Location': '/diary',
+            'Set-Cookie': authCookieHeader(env.AUTH_TOKEN),
+          }
+        });
+      }
+      return new Response(LOGIN_HTML.replace('__ERROR__', 'Incorrect password — try again.'), {
+        status: 401,
+        headers: { 'Content-Type': 'text/html; charset=UTF-8' }
+      });
+    }
+
+    // ── GET /diary/logout ────────────────────────────────────────────────────
+    if (path === '/diary/logout') {
+      return new Response('', {
+        status: 302,
+        headers: {
+          'Location': '/diary/login',
+          'Set-Cookie': 'diary_auth=; Path=/diary; HttpOnly; Secure; Max-Age=0',
+        }
+      });
+    }
+
+    // ── GET /diary/login — show login page ───────────────────────────────────
+    if (path === '/diary/login') {
+      return new Response(LOGIN_HTML.replace('__ERROR__', ''), {
+        headers: { 'Content-Type': 'text/html; charset=UTF-8' }
+      });
+    }
+
+    // ── All /diary* routes — require cookie auth ─────────────────────────────
+    if (!isAuthenticated()) {
+      return new Response('', {
+        status: 302,
+        headers: { 'Location': '/diary/login' }
+      });
+    }
+
+    // ── Strip /diary prefix for internal routing ─────────────────────────────
+    const subpath = path.replace(/^\/diary/, '') || '/';
+
+    // ── GET /diary/api/data ──────────────────────────────────────────────────
+    if (subpath === '/api/data' && request.method === 'GET') {
       let data = await env.DIARY_DATA.get('diary', { type: 'json' });
       if (!data) data = SEED_DATA;
       return new Response(JSON.stringify(data), {
@@ -852,14 +910,9 @@ export default {
       });
     }
 
-    // ── PUT /api/task/:taskId ─────────────────────────────────────────────────
-    if (path.startsWith('/api/task/') && request.method === 'PUT') {
-      if (path === '/api/task/__ping') {
-        if (!checkAuth()) return new Response('Unauthorized', { status: 401 });
-        return new Response(JSON.stringify({ ok: true }), { headers: { 'Content-Type': 'application/json' } });
-      }
-      if (!checkAuth()) return new Response('Unauthorized', { status: 401 });
-      const taskId = decodeURIComponent(path.slice('/api/task/'.length));
+    // ── PUT /diary/api/task/:taskId ──────────────────────────────────────────
+    if (subpath.startsWith('/api/task/') && request.method === 'PUT') {
+      const taskId = decodeURIComponent(subpath.slice('/api/task/'.length));
       const body = await request.json();
       let data = await env.DIARY_DATA.get('diary', { type: 'json' });
       if (!data) data = JSON.parse(JSON.stringify(SEED_DATA));
@@ -877,10 +930,9 @@ export default {
       });
     }
 
-    // ── PUT /api/journal/:taskId ──────────────────────────────────────────────
-    if (path.startsWith('/api/journal/') && request.method === 'PUT') {
-      if (!checkAuth()) return new Response('Unauthorized', { status: 401 });
-      const taskId = decodeURIComponent(path.slice('/api/journal/'.length));
+    // ── PUT /diary/api/journal/:taskId ───────────────────────────────────────
+    if (subpath.startsWith('/api/journal/') && request.method === 'PUT') {
+      const taskId = decodeURIComponent(subpath.slice('/api/journal/'.length));
       const body = await request.json();
       let data = await env.DIARY_DATA.get('diary', { type: 'json' });
       if (!data) data = JSON.parse(JSON.stringify(SEED_DATA));
@@ -897,8 +949,8 @@ export default {
       });
     }
 
-    // ── GET /api/export ──────────────────────────────────────────────────────
-    if (path === '/api/export' && request.method === 'GET') {
+    // ── GET /diary/api/export ────────────────────────────────────────────────
+    if (subpath === '/api/export' && request.method === 'GET') {
       let data = await env.DIARY_DATA.get('diary', { type: 'json' });
       if (!data) data = SEED_DATA;
       return new Response(JSON.stringify(data, null, 2), {
@@ -909,15 +961,18 @@ export default {
       });
     }
 
-    // ── GET / — serve HTML app ───────────────────────────────────────────────
+    // ── GET /diary — serve the app ───────────────────────────────────────────
     let data = await env.DIARY_DATA.get('diary', { type: 'json' });
     if (!data) {
-      // First load — seed KV and return seeded data
       data = JSON.parse(JSON.stringify(SEED_DATA));
       await env.DIARY_DATA.put('diary', JSON.stringify(data));
     }
+    // Fix all API paths to use /diary prefix
+    const appHtml = HTML
+      .replace(/fetch\('\/api\//g, "fetch('/diary/api/")
+      .replace(/action="\/diary\/login"/g, 'action="/diary/login"');
     const inlineScript = `<script>window.__DIARY_DATA__ = ${JSON.stringify(data)};<\/script>`;
-    const page = HTML.replace('</head>', inlineScript + '</head>');
+    const page = appHtml.replace('</head>', inlineScript + '</head>');
     return new Response(page, {
       headers: { 'Content-Type': 'text/html; charset=UTF-8', 'Cache-Control': 'no-store' }
     });
