@@ -338,6 +338,7 @@ async function toggleTask(taskId, checkbox) {
   try {
     const res = await fetch('/diary/api/task/' + encodeURIComponent(taskId), {
       method: 'PUT',
+      credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ completed })
     });
@@ -400,6 +401,7 @@ async function saveJournal(taskId) {
   try {
     const res = await fetch('/diary/api/journal/' + encodeURIComponent(taskId), {
       method: 'PUT',
+      credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ journal })
     });
@@ -432,7 +434,7 @@ function refreshStats() {
 
 // ─── Export ──────────────────────────────────────────────────────────────────
 async function exportData() {
-  const res = await fetch('/diary/api/export');
+  const res = await fetch('/diary/api/export', { credentials: 'same-origin' });
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
