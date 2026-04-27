@@ -325,9 +325,9 @@ function buildDeferredTaskHtml(taskId, tasks) {
   const deferredTo = task.deferredTo || 'Post-vacation (July 15+)';
   let t = '';
   t += '<div class="task-item deferred" id="item-' + taskId + '">';
-  t += '<div class="task-row" onclick="toggleJournal('' + taskId + '')">';
+  t += '<div class="task-row" onclick="toggleJournal(&apos;' + taskId + '&apos;)">';
   t += '<div class="task-check"><input type="checkbox" ' + (checked ? 'checked' : '') +
-    ' onclick="event.stopPropagation();toggleTask('' + taskId + '', this)" /></div>';
+    ' onclick="event.stopPropagation();toggleTask(&apos;' + taskId + '&apos;, this)" /></div>';
   t += '<div class="task-body">';
   t += '<div class="task-text' + (checked ? ' completed-text' : '') + '">';
   t += '<span class="deferred-badge">Deferred → ' + escHtml(deferredTo) + '</span>';
@@ -336,12 +336,12 @@ function buildDeferredTaskHtml(taskId, tasks) {
   if (checked && task.completedAt) {
     t += '<span class="completed-at">&#10003; Completed ' + formatDate(task.completedAt) + '</span>';
   }
-  t += '<button class="journal-toggle' + (task.journal && task.journal.trim() ? ' has-journal' : '') + '" onclick="event.stopPropagation();toggleJournal('' + taskId + '')">' +
+  t += '<button class="journal-toggle' + (task.journal && task.journal.trim() ? ' has-journal' : '') + '" onclick="event.stopPropagation();toggleJournal(&apos;' + taskId + '&apos;)">' +
     (task.journal && task.journal.trim() ? '&#128221; View journal' : '+ Add journal note') + '</button>';
   t += '</div></div></div>';
   t += '<div class="journal-area" id="journal-' + taskId + '">';
   t += '<textarea class="journal-textarea" id="jtext-' + taskId + '" placeholder="Notes…" ' +
-    'oninput="scheduleJournalSave('' + taskId + '')">' + escHtml(task.journal || '') + '</textarea>';
+    'oninput="scheduleJournalSave(&apos;' + taskId + '&apos;)">' + escHtml(task.journal || '') + '</textarea>';
   t += '<div class="journal-footer"><span class="save-indicator" id="saved-' + taskId + '">&#10003; Saved</span></div>';
   t += '</div></div>';
   return t;
