@@ -138,6 +138,63 @@ const HTML = `<!DOCTYPE html>
       .journal-area { padding: 0 16px 14px 16px; }
       .category-label { padding: 5px 16px; }
     }
+
+    /* ── VIEW TABS ──────────────────────────────────────────────────────────── */
+    .view-tabs { display: flex; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+    .view-tab { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.7); padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s; text-decoration: none; }
+    .view-tab:hover { background: rgba(255,255,255,0.2); color: white; }
+    .view-tab.active { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.6); color: white; }
+
+    /* ── FAST TRACK DEADLINE BANNERS ─────────────────────────────────────────── */
+    .ft-banners { border-bottom: 1px solid var(--border); }
+    .ft-deadline-bar { padding: 10px 24px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--border); }
+    .ft-deadline-bar.state-upcoming-critical { background: var(--red-bg); }
+    .ft-deadline-bar.state-active { background: var(--amber-bg); border-top-color: var(--amber-border); }
+    .ft-deadline-bar.state-upcoming { background: var(--light-gray); }
+    .ft-deadline-bar.state-passed { opacity: 0.3; background: var(--light-gray); }
+    .ft-deadline-icon { font-size: 15px; flex-shrink: 0; }
+    .ft-deadline-text { font-size: 13px; font-weight: 700; }
+    .ft-deadline-bar.state-upcoming-critical .ft-deadline-text { color: var(--red); }
+    .ft-deadline-bar.state-active .ft-deadline-text { color: var(--amber); }
+    .ft-deadline-bar.state-upcoming .ft-deadline-text { color: var(--navy); }
+    .ft-deadline-bar.state-passed .ft-deadline-text { color: var(--gray); }
+    .ft-deadline-date { font-size: 11px; font-weight: 600; opacity: 0.7; margin-left: auto; white-space: nowrap; }
+
+    /* ── FAST TRACK EXAM BOOKING SECTION ────────────────────────────────────── */
+    .ft-exam-section { background: white; border: 2px solid var(--light-blue); border-radius: 10px; margin: 20px 24px; overflow: hidden; box-shadow: 0 2px 8px rgba(46,80,144,0.10); }
+    .ft-exam-title { background: var(--blue); color: white; padding: 10px 16px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+    .ft-exam-subtitle { font-size: 11px; opacity: 0.75; font-weight: 400; letter-spacing: 0.02em; text-transform: none; }
+
+    /* ── FAST TRACK SPRINT WEEK ──────────────────────────────────────────────── */
+    .sprint-critical-before { display: flex; align-items: flex-start; gap: 10px; padding: 10px 24px; background: var(--red-bg); border-bottom: 1px solid var(--red-border); }
+    .sprint-critical-text { font-size: 13px; font-weight: 700; color: var(--red); line-height: 1.4; }
+
+    /* ── DEFERRED TASKS ──────────────────────────────────────────────────────── */
+    .deferred-toggle-row { padding: 7px 24px; display: flex; align-items: center; gap: 8px; cursor: pointer; background: #ECEEF3; border-top: 1px solid var(--border); user-select: none; }
+    .deferred-toggle-row:hover { background: #E0E3EC; }
+    .deferred-toggle-icon { font-size: 10px; color: var(--gray); transition: transform 0.2s; display: inline-block; }
+    .deferred-toggle-icon.open { transform: rotate(90deg); }
+    .deferred-toggle-label { font-size: 11px; font-weight: 700; color: var(--gray); letter-spacing: 0.05em; text-transform: uppercase; }
+    .deferred-group { display: none; }
+    .deferred-group.open { display: block; }
+    .task-item.deferred { opacity: 0.5; background: #F7F8FA; }
+    .task-item.deferred .task-text { color: var(--gray); }
+    .deferred-badge { display: inline-block; font-size: 10px; font-weight: 700; color: #888; background: #e4e4e4; border-radius: 4px; padding: 1px 5px; margin-right: 5px; letter-spacing: 0.02em; vertical-align: middle; }
+
+    /* ── POST VACATION SECTION ───────────────────────────────────────────────── */
+    .post-vac-outer { background: white; border-top: 3px solid var(--border); }
+    .post-vac-header { background: var(--navy); color: white; padding: 20px 24px 16px; }
+    .post-vac-header h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+    .post-vac-header p { font-size: 14px; opacity: 0.7; }
+    .post-vac-group { padding: 16px 24px; border-bottom: 1px solid var(--border); }
+    .post-vac-group:last-child { border-bottom: none; }
+    .post-vac-group-title { font-size: 12px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+    .post-vac-item { font-size: 13px; color: var(--text); padding: 3px 0 3px 12px; border-left: 2px solid var(--border); margin-bottom: 2px; line-height: 1.5; }
+
+    @media (max-width: 768px) {
+      .ft-exam-section { margin: 12px 16px; }
+      .ft-deadline-bar, .sprint-critical-before { padding: 8px 16px; }
+    }
   </style>
 </head>
 <body>
@@ -154,6 +211,9 @@ const HTML = `<!DOCTYPE html>
       <div class="progress-label" id="overall-label">Loading…</div>
       <div class="current-week-badge" id="current-week-badge">Week —</div>
       <a href="/diary/logout" class="logout-link">Sign out</a>
+    <div class="view-tabs">
+      <button class="view-tab active" id="tab-original" onclick="setView('original')">&#128203; Original 15-Week Plan</button>
+      <button class="view-tab" id="tab-fasttrack" onclick="setView('fast-track')">&#9889; Fast Track: 7-Week Sprint</button>
     </div>
   </div>
 </header>
@@ -190,10 +250,23 @@ function getCurrentWeek() {
 // ─── Data ────────────────────────────────────────────────────────────────────
 let allData = null;
 
+// ─── View state ──────────────────────────────────────────────────────────────
+let activeView = 'original';
+function setView(v) {
+  activeView = v;
+  document.getElementById('tab-original').classList.toggle('active', v === 'original');
+  document.getElementById('tab-fasttrack').classList.toggle('active', v === 'fast-track');
+  renderAll();
+}
+function renderAll() {
+  if (activeView === 'fast-track') renderFastTrack();
+  else renderOriginalPlan();
+}
+
 async function loadData() {
   try {
     allData = window.__DIARY_DATA__ || await fetch('/diary/api/data').then(r => r.json());
-    render();
+    renderAll();
   } catch(e) {
     document.getElementById('main-content').innerHTML =
       '<p style="text-align:center;padding:60px;color:#C0392B;">Failed to load diary data. Please refresh.</p>';
@@ -244,8 +317,87 @@ function buildTaskHtml(taskId, carriedFromWeek, weekNum, tasks) {
   return t;
 }
 
-// ─── Render ──────────────────────────────────────────────────────────────────
-function render() {
+// ─── Deferred task HTML (read-only style, no push button) ────────────────────
+function buildDeferredTaskHtml(taskId, tasks) {
+  const task = tasks[taskId];
+  if (!task) return '';
+  const checked = task.completed;
+  const deferredTo = task.deferredTo || 'Post-vacation (July 15+)';
+  let t = '';
+  t += '<div class="task-item deferred" id="item-' + taskId + '">';
+  t += '<div class="task-row" onclick="toggleJournal('' + taskId + '')">';
+  t += '<div class="task-check"><input type="checkbox" ' + (checked ? 'checked' : '') +
+    ' onclick="event.stopPropagation();toggleTask('' + taskId + '', this)" /></div>';
+  t += '<div class="task-body">';
+  t += '<div class="task-text' + (checked ? ' completed-text' : '') + '">';
+  t += '<span class="deferred-badge">Deferred → ' + escHtml(deferredTo) + '</span>';
+  t += escHtml(task.description) + '</div>';
+  t += '<div class="task-meta">';
+  if (checked && task.completedAt) {
+    t += '<span class="completed-at">&#10003; Completed ' + formatDate(task.completedAt) + '</span>';
+  }
+  t += '<button class="journal-toggle' + (task.journal && task.journal.trim() ? ' has-journal' : '') + '" onclick="event.stopPropagation();toggleJournal('' + taskId + '')">' +
+    (task.journal && task.journal.trim() ? '&#128221; View journal' : '+ Add journal note') + '</button>';
+  t += '</div></div></div>';
+  t += '<div class="journal-area" id="journal-' + taskId + '">';
+  t += '<textarea class="journal-textarea" id="jtext-' + taskId + '" placeholder="Notes…" ' +
+    'oninput="scheduleJournalSave('' + taskId + '')">' + escHtml(task.journal || '') + '</textarea>';
+  t += '<div class="journal-footer"><span class="save-indicator" id="saved-' + taskId + '">&#10003; Saved</span></div>';
+  t += '</div></div>';
+  return t;
+}
+
+function toggleDeferredGroup(weekNum) {
+  const group = document.getElementById('deferred-group-' + weekNum);
+  const icon  = document.getElementById('deferred-icon-' + weekNum);
+  if (!group) return;
+  const open = group.classList.toggle('open');
+  if (icon) icon.classList.toggle('open', open);
+}
+
+// ─── Post-vacation section HTML ────────────────────────────────────────────
+function buildPostVacationHtml() {
+  const POST_VAC = [
+    { title: 'July 15 – July 31', items: [
+      'E&O insurance research and binding',
+      'Mock Audit #1 (Shopify) — begin once back',
+      'Schedule networking calls (Joel, Ellen, Mitchell, Dale)',
+      'LinkedIn / website credential update (assumes CPWA awarded ∼July 29)'
+    ]},
+    { title: 'Early August', items: [
+      'Anti-overlay LinkedIn article (publish after CPWA confirmed)',
+      'Mock Audit #2 (Restaurant)'
+    ]},
+    { title: 'Late August', items: [
+      'Restaurant demand letter article',
+      'Mock Audit #3 (Complex)',
+      'Begin client outreach (“Panic Button” pilots)'
+    ]},
+    { title: 'Indefinitely Deferred (no fixed date)', items: [
+      'JAWS deep dive',
+      'VoiceOver iPhone testing',
+      'Keyboard timing drills',
+      'Legal Risk Mapping Exercise',
+      'Audit report templates'
+    ]}
+  ];
+  let h = '<div class="post-vac-outer">';
+  h += '<div class="post-vac-header"><h2>Post-Vacation (July 15+)</h2>';
+  h += '<p>All client-facing and business-development tasks deferred until after CPWA results arrive (~July 29).</p></div>';
+  POST_VAC.forEach(g => {
+    h += '<div class="post-vac-group">';
+    h += '<div class="post-vac-group-title">' + escHtml(g.title) + '</div>';
+    g.items.forEach(item => {
+      h += '<div class="post-vac-item">' + escHtml(item) + '</div>';
+    });
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+// ─── Render: Original Plan ───────────────────────────────────────────────────
+function renderOriginalPlan() {
   const { tasks, weeks } = allData;
   const currentWeek = getCurrentWeek();
 
@@ -352,11 +504,12 @@ function render() {
 
       html += '<div class="category-label">' + escHtml(cat.name) + '</div>';
 
-      // Native tasks (skip ones that have been pushed away)
+      // Native tasks (skip pushed-away and deferred)
       cat.taskIds.forEach(taskId => {
         const task = tasks[taskId];
         if (!task) return;
         if (task.pushedToWeek) return; // hidden — living in a future week now
+        if (task.deferred) return;     // deferred — shown in collapsed section below
         html += buildTaskHtml(taskId, null, w.weekNum, tasks);
       });
 
@@ -381,8 +534,31 @@ function render() {
       html += '</div>';
     }
 
+    // ── Deferred tasks section (collapsed by default) ─────────────────────────
+    const weekDeferredIds = [];
+    w.tasks.forEach(taskId => {
+      const task = tasks[taskId];
+      if (task && task.deferred) weekDeferredIds.push(taskId);
+    });
+    if (weekDeferredIds.length > 0) {
+      const dGroupId = 'deferred-group-' + w.weekNum;
+      const dIconId  = 'deferred-icon-' + w.weekNum;
+      html += '<div class="deferred-toggle-row" onclick="toggleDeferredGroup(' + w.weekNum + ')">';
+      html += '<span class="deferred-toggle-icon" id="' + dIconId + '">&#9658;</span>';
+      html += '<span class="deferred-toggle-label">' + weekDeferredIds.length + ' deferred task' + (weekDeferredIds.length > 1 ? 's' : '') + ' &mdash; Post-vacation (July 15+)</span>';
+      html += '</div>';
+      html += '<div class="deferred-group" id="' + dGroupId + '">';
+      weekDeferredIds.forEach(taskId => {
+        html += buildDeferredTaskHtml(taskId, tasks);
+      });
+      html += '</div>';
+    }
+
     html += '</div>'; // week-section
   });
+
+  // ── Post-vacation section ────────────────────────────────────────────────────
+  html += buildPostVacationHtml();
 
   document.getElementById('main-content').innerHTML = html;
 
@@ -504,7 +680,7 @@ async function pushTask(taskId, currentWeekNum) {
       allData.tasks[taskId].pushedFromWeek = updated.pushedFromWeek;
     }
     // Full re-render to reflect the change
-    render();
+    renderAll();
   } catch(e) {
     console.error('Push failed:', e);
     alert('Could not push task — check your connection.');
@@ -551,6 +727,244 @@ function formatDate(iso) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 }
 
+
+// ─── Fast Track: Sprint data ──────────────────────────────────────────────────
+const SPRINT_WEEKS = [
+  { sprintNum: 1, title: 'Foundations', dates: 'May 2–4, 2026', hours: '6–8 hours', isShortWeek: true,
+    critical: null,
+    categories: [
+      { name: 'CPACC (4h)', taskIds: ['sp1-cpacc-deque'] },
+      { name: 'DHS Trusted Tester (2h)', taskIds: ['sp1-dhs-m12'] },
+      { name: 'Admin (2h)', taskIds: ['sp1-admin-calendar', 'sp1-admin-nvda'] }
+    ]
+  },
+  { sprintNum: 2, title: 'CPACC Deep Dive + DHS Screen Readers', dates: 'May 5–11, 2026', hours: '14 hours', isShortWeek: false,
+    critical: 'CRITICAL: May 6 — Submit CPACC application ($410); submit WAS screening application (free); book CPACC exam for May 20–23',
+    categories: [
+      { name: 'CPACC (7h)', taskIds: ['sp2-cpacc-deque'] },
+      { name: 'WAS (2h)', taskIds: ['sp2-was-domain1a'] },
+      { name: 'DHS Trusted Tester (3h)', taskIds: ['sp2-dhs-m34'] },
+      { name: 'Admin (2h)', taskIds: ['w5-admin-cpacc-apply', 'w5-admin-was-apply', 'exam-cpacc-booked', 'sp2-admin-confirm'] }
+    ]
+  },
+  { sprintNum: 3, title: 'CPACC Cram + WAS Kickoff + NVDA Practice', dates: 'May 12–18, 2026', hours: '14 hours', isShortWeek: false,
+    critical: null,
+    categories: [
+      { name: 'CPACC (7h)', taskIds: ['sp3-cpacc-deque'] },
+      { name: 'WAS (3h)', taskIds: ['sp3-was-domain12'] },
+      { name: 'DHS Trusted Tester (3h)', taskIds: ['sp3-dhs-m5-nvda'] },
+      { name: 'Admin (1h)', taskIds: ['sp3-admin-confirm'] }
+    ]
+  },
+  { sprintNum: 4, title: 'CPACC Exam + WAS ARIA + DHS Forms/Tables', dates: 'May 19–25, 2026', hours: '14 hours', isShortWeek: false,
+    critical: 'CRITICAL: Take CPACC Exam (May 20–23)',
+    categories: [
+      { name: 'CPACC pre-exam (6h)', taskIds: ['sp4-cpacc-preexam'] },
+      { name: 'Exam', taskIds: ['exam-cpacc-completed'] },
+      { name: 'WAS (4h)', taskIds: ['sp4-was-domain2'] },
+      { name: 'DHS Trusted Tester (3h)', taskIds: ['sp4-dhs-m67'] },
+      { name: 'Admin (1h)', taskIds: ['exam-was-screening-approved', 'exam-was-booked', 'sp4-admin-was-confirm'] }
+    ]
+  },
+  { sprintNum: 5, title: 'WAS Intensive + DHS Practical Prep', dates: 'May 26–Jun 1, 2026', hours: '14 hours', isShortWeek: false,
+    critical: null,
+    categories: [
+      { name: 'WAS (8h)', taskIds: ['sp5-was-domain3'] },
+      { name: 'DHS Trusted Tester (4h)', taskIds: ['sp5-dhs-m89'] },
+      { name: 'Admin (2h)', taskIds: ['sp5-admin-confirm'] }
+    ]
+  },
+  { sprintNum: 6, title: 'WAS Exam + DHS Final Modules + Retake Buffer', dates: 'Jun 2–8, 2026', hours: '14 hours', isShortWeek: false,
+    critical: 'CRITICAL: Take WAS Exam (June 3–8)',
+    categories: [
+      { name: 'WAS pre-exam (5h)', taskIds: ['sp6-was-preexam'] },
+      { name: 'Exam', taskIds: ['exam-was-completed'] },
+      { name: 'DHS Trusted Tester (4h)', taskIds: ['sp6-dhs-m1011'] },
+      { name: 'Admin (5h)', taskIds: ['sp6-admin-retake'] }
+    ]
+  },
+  { sprintNum: 7, title: 'DHS Exam + Final Buffer + Wind Down', dates: 'Jun 9–15, 2026', hours: '10–12 hours', isShortWeek: false,
+    critical: 'CRITICAL: Take DHS Trusted Tester Practical Exam (June 10–12)',
+    categories: [
+      { name: 'DHS Trusted Tester (4h)', taskIds: ['sp7-dhs-exam'] },
+      { name: 'Exam', taskIds: ['exam-dhs-modules-complete', 'exam-dhs-practical-complete'] },
+      { name: 'Buffer (3h)', taskIds: ['sp7-buffer'] },
+      { name: 'Admin (3–5h)', taskIds: ['sp7-admin-wind-down', 'exam-vacation-responder'] }
+    ]
+  }
+];
+
+const EXAM_BOOKINGS = [
+  { taskId: 'w5-admin-cpacc-apply',     label: 'CPACC application submitted',                    target: 'target: May 6' },
+  { taskId: 'exam-cpacc-booked',        label: 'CPACC exam booked at Pearson VUE',                target: '' },
+  { taskId: 'exam-cpacc-completed',     label: 'CPACC exam completed',                            target: 'May 20–23' },
+  { taskId: 'w5-admin-was-apply',       label: 'WAS screening application submitted',             target: 'target: May 6' },
+  { taskId: 'exam-was-screening-approved', label: 'WAS screening approved by IAAP',               target: '' },
+  { taskId: 'exam-was-booked',          label: 'WAS exam booked at Pearson VUE',                  target: '' },
+  { taskId: 'exam-was-completed',       label: 'WAS exam completed',                              target: 'June 3–10' },
+  { taskId: 'exam-dhs-modules-complete',label: 'DHS Trusted Tester — all 11 modules complete', target: '' },
+  { taskId: 'exam-dhs-practical-complete', label: 'DHS Trusted Tester practical exam completed',  target: 'June 10–12' },
+  { taskId: 'exam-vacation-responder',  label: 'Vacation auto-responder set',                     target: 'June 22 – July 14' }
+];
+
+const DEADLINE_BANNERS = [
+  { text: 'CPACC + WAS applications open — SUBMIT TODAY', date: '2026-05-06', type: 'deadline' },
+  { text: 'Application window closes — LAST CHANCE to apply', date: '2026-05-20', type: 'deadline' },
+  { text: 'CPACC exam window — book Pearson VUE if not done', start: '2026-05-20', end: '2026-05-23', type: 'window' },
+  { text: 'WAS exam window', start: '2026-06-03', end: '2026-06-10', type: 'window' },
+  { text: 'DHS Trusted Tester practical exam', start: '2026-06-10', end: '2026-06-12', type: 'window' },
+  { text: 'Final retake deadline — exam window closes', date: '2026-06-17', type: 'deadline' },
+  { text: 'Vacation begins — set auto-responder', date: '2026-06-22', type: 'vacation' }
+];
+
+function getBannerState(banner) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  if (banner.start && banner.end) {
+    const s = new Date(banner.start); const e = new Date(banner.end);
+    if (today > e) return 'passed';
+    if (today >= s) return 'active';
+    const soon = new Date(s); soon.setDate(soon.getDate() - 14);
+    return today >= soon ? 'active' : 'upcoming';
+  }
+  const d = new Date(banner.date);
+  if (today > d) return 'passed';
+  const soon = new Date(d); soon.setDate(soon.getDate() - 14);
+  if (today >= soon) return banner.type === 'deadline' ? 'upcoming-critical' : 'upcoming';
+  return 'upcoming';
+}
+
+function renderFastTrack() {
+  const { tasks } = allData;
+  const currentSprint = getCurrentSprintWeek();
+
+  // Overall stats (same header elements as original plan)
+  const sprintTaskIds = SPRINT_WEEKS.flatMap(sw => sw.categories.flatMap(c => c.taskIds));
+  const examBookingIds = EXAM_BOOKINGS.map(e => e.taskId);
+  const ftTaskIds = [...new Set([...sprintTaskIds, ...examBookingIds])];
+  const ftTotal = ftTaskIds.filter(id => tasks[id]).length;
+  const ftCompleted = ftTaskIds.filter(id => tasks[id] && tasks[id].completed).length;
+  const pct = ftTotal ? Math.round(ftCompleted / ftTotal * 100) : 0;
+
+  document.getElementById('overall-bar').style.width = pct + '%';
+  document.getElementById('overall-label').textContent = ftCompleted + ' of ' + ftTotal + ' sprint tasks (' + pct + '%)';
+  document.getElementById('current-week-badge').textContent = currentSprint ? 'Sprint Wk ' + currentSprint : 'Pre-sprint';
+
+  // Sprint nav
+  const nav = document.getElementById('week-nav');
+  let navHTML = '';
+  SPRINT_WEEKS.forEach(sw => {
+    const swIds = sw.categories.flatMap(c => c.taskIds).filter(id => tasks[id]);
+    const swDone = swIds.filter(id => tasks[id] && tasks[id].completed).length;
+    const isCurrent = sw.sprintNum === currentSprint;
+    const isComplete = swIds.length > 0 && swDone === swIds.length;
+    let cls = 'week-btn';
+    if (isCurrent) cls += ' current';
+    else if (isComplete) cls += ' complete';
+    navHTML += '<a href="#sprint-' + sw.sprintNum + '" class="' + cls + '">SW' + sw.sprintNum + '</a>';
+  });
+  navHTML += '<span class="nav-stats" id="nav-stats">' + ftCompleted + ' done \xB7 ' + pct + '% sprint</span>';
+  nav.innerHTML = navHTML;
+
+  let html = '';
+
+  // ── Deadline banners ──────────────────────────────────────────────────────
+  html += '<div class="ft-banners">';
+  DEADLINE_BANNERS.forEach(b => {
+    const state = getBannerState(b);
+    const icon = state === 'passed' ? '✓' : (b.type === 'deadline' ? '🔴' : '📅');
+    const dateLabel = b.date ? new Date(b.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}) :
+      new Date(b.start).toLocaleDateString('en-US',{month:'short',day:'numeric'}) + '–' +
+      new Date(b.end).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    html += '<div class="ft-deadline-bar state-' + state + '">';
+    html += '<span class="ft-deadline-icon">' + icon + '</span>';
+    html += '<span class="ft-deadline-text">' + escHtml(b.text) + '</span>';
+    html += '<span class="ft-deadline-date">' + escHtml(dateLabel) + '</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // ── Exam booking checkboxes ───────────────────────────────────────────────
+  html += '<div style="padding: 20px 24px 0;">';
+  html += '<div class="ft-exam-section">';
+  html += '<div class="ft-exam-title">&#9989; Exam Bookings &amp; Completions';
+  html += '<span class="ft-exam-subtitle"> — checks sync with the Original Plan view</span></div>';
+  EXAM_BOOKINGS.forEach(eb => {
+    const task = tasks[eb.taskId];
+    if (!task) return;
+    html += buildTaskHtml(eb.taskId, null, 99, tasks);
+  });
+  html += '</div></div>';
+
+  // ── Sprint weeks ──────────────────────────────────────────────────────────
+  SPRINT_WEEKS.forEach(sw => {
+    const swIds = sw.categories.flatMap(c => c.taskIds).filter(id => tasks[id]);
+    const swDone = swIds.filter(id => tasks[id] && tasks[id].completed).length;
+    const swPct = swIds.length ? Math.round(swDone / swIds.length * 100) : 0;
+    const isCurrent = sw.sprintNum === currentSprint;
+
+    html += '<div class="week-section" id="sprint-' + sw.sprintNum + '">';
+    html += '<div class="week-header' + (isCurrent ? ' current-week' : '') + '">';
+    html += '<div class="week-title"><h2>SPRINT WEEK ' + sw.sprintNum + ': ' + escHtml(sw.title) + '</h2>';
+    html += '<div class="week-dates">' + escHtml(sw.dates) + (sw.isShortWeek ? ' — short week' : '') + '</div></div>';
+    html += '<div class="week-meta">';
+    html += '<span class="hours-badge">' + escHtml(sw.hours) + '</span>';
+    html += '<div><div class="week-progress-text">' + swDone + '/' + swIds.length + ' tasks</div>';
+    html += '<div class="week-progress-bar"><div class="week-progress-fill" style="width:' + swPct + '%"></div></div></div>';
+    html += '</div></div>';
+
+    if (sw.critical) {
+      html += '<div class="sprint-critical-before"><span style="font-size:16px;flex-shrink:0">🔴</span>';
+      html += '<span class="sprint-critical-text">' + escHtml(sw.critical) + '</span></div>';
+    }
+
+    sw.categories.forEach(cat => {
+      html += '<div class="category-group">';
+      html += '<div class="category-label">' + escHtml(cat.name) + '</div>';
+      cat.taskIds.forEach(taskId => {
+        if (!tasks[taskId]) return;
+        html += buildTaskHtml(taskId, null, 99, tasks);
+      });
+      html += '</div>';
+    });
+
+    html += '</div>';
+  });
+
+  // ── Hard stop section ─────────────────────────────────────────────────────
+  html += '<div class="week-section" id="sprint-hardstop">';
+  html += '<div class="week-header"><div class="week-title"><h2>HARD STOP — Jun 16–22</h2>';
+  html += '<div class="week-dates">June 22: Vacation begins. Zero accessibility work for 3 weeks.</div></div>';
+  html += '<div class="week-meta"><span class="hours-badge" style="background:var(--red-bg);color:var(--red);border-color:var(--red-border)">June 17 = the wall</span></div></div>';
+  html += '<div class="category-group"><div class="category-label">Reminders</div>';
+  html += '<div class="task-row" style="cursor:default;padding:14px 24px;font-size:13px;color:var(--red);font-weight:600">';
+  html += '&#128683; June 17: ABSOLUTE FINAL DEADLINE for any exam retakes. After this date, no more exams until the next window.</div>';
+  html += '<div class="task-row" style="cursor:default;padding:14px 24px;font-size:13px;color:var(--gray)">';
+  html += 'June 22: Vacation begins. Set auto-responder. Zero accessibility work for 3 weeks.</div>';
+  html += '</div></div>';
+
+  document.getElementById('main-content').innerHTML = html;
+  if (allData.meta && allData.meta.lastUpdated) {
+    document.getElementById('last-synced').textContent = 'Last synced: ' + formatDate(allData.meta.lastUpdated);
+  }
+}
+
+function getCurrentSprintWeek() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const sprintDates = [
+    [new Date('2026-05-02'), new Date('2026-05-04')],
+    [new Date('2026-05-05'), new Date('2026-05-11')],
+    [new Date('2026-05-12'), new Date('2026-05-18')],
+    [new Date('2026-05-19'), new Date('2026-05-25')],
+    [new Date('2026-05-26'), new Date('2026-06-01')],
+    [new Date('2026-06-02'), new Date('2026-06-08')],
+    [new Date('2026-06-09'), new Date('2026-06-15')]
+  ];
+  for (let i = 0; i < sprintDates.length; i++) {
+    if (today >= sprintDates[i][0] && today <= sprintDates[i][1]) return i + 1;
+  }
+  return null;
+}
+
 // ─── Boot ────────────────────────────────────────────────────────────────────
 loadData();
 </script>
@@ -582,7 +996,7 @@ const SEED_DATA = {
     "w2-skills-nvda-flows": { description: "Complete full user flows: browse → add to cart → checkout → form submission", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w2-skills-keyboard-unplug": { description: "Unplug mouse entirely. Navigate the same 3 Shopify stores keyboard-only — Tab/Shift+Tab/Enter/Space/Escape/Arrow keys", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w2-skills-keyboard-document": { description: "For each site, document: Can you reach every interactive element? Can you see where focus is? Can you escape every modal/drawer/dropdown? Can you complete checkout?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w2-skills-keyboard-time": { description: "Time yourself — target is to keyboard-test a 10-page site in under 2 hours by Week 4", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w2-skills-keyboard-time": { deferred: true, deferredTo: "Post-vacation", description: "Time yourself — target is to keyboard-test a 10-page site in under 2 hours by Week 4", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w2-study-cpacc": { description: "Begin CPACC prep via Deque University (3–4 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w2-study-dhs1": { description: "DHS Trusted Tester Module 1 (2–3 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
@@ -591,69 +1005,69 @@ const SEED_DATA = {
     "w3-skills-keyboard-restaurant": { description: "Keyboard: Repeat keyboard-only testing on the 2 restaurant sites — document focus traps, missing skip nav, broken date pickers (2 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w3-study-cpacc": { description: "CPACC: Complete Deque prep course, review IAAP Body of Knowledge (8–10 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w3-study-dhs23": { description: "DHS Trusted Tester Modules 2–3 (4 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w3-study-wcag-print": { description: "Print or open the full WCAG 2.1 success criteria list (all 78: 50 A + 20 AA + 8 AAA)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w3-study-wcag-tag": { description: "Tag each WCAG criterion: 🔴 High lawsuit risk / 🟡 Medium lawsuit risk / ⚪ Low/AAA — using the deep dive document's top 10 list", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w3-study-wcag-reference": { description: "Keep tagged WCAG list as reference during all future study — go deep on 🔴 criteria, lighter on ⚪ AAA criteria", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w3-study-wcag-print": { deferred: true, deferredTo: "Deferred indefinitely", description: "Print or open the full WCAG 2.1 success criteria list (all 78: 50 A + 20 AA + 8 AAA)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w3-study-wcag-tag": { deferred: true, deferredTo: "Deferred indefinitely", description: "Tag each WCAG criterion: 🔴 High lawsuit risk / 🟡 Medium lawsuit risk / ⚪ Low/AAA — using the deep dive document's top 10 list", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w3-study-wcag-reference": { deferred: true, deferredTo: "Deferred indefinitely", description: "Keep tagged WCAG list as reference during all future study — go deep on 🔴 criteria, lighter on ⚪ AAA criteria", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // WEEK 4
-    "w4-skills-jaws": { description: "JAWS: Learn equivalents of NVDA commands, test same sites with both screen readers (4 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w4-skills-jaws": { deferred: true, deferredTo: "Post-CPWA (no fixed date)", description: "JAWS: Learn equivalents of NVDA commands, test same sites with both screen readers (4 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w4-skills-keyboard": { description: "Keyboard testing: Test 2 new sites you haven't seen before — can you find issues cold? (3 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w4-skills-combined": { description: "Combined test: Run NVDA + keyboard on a site end-to-end, logging findings in structured format — dress rehearsal for Mock Audit #1 (2 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w4-skills-combined": { deferred: true, deferredTo: "Post-CPWA (no fixed date)", description: "Combined test: Run NVDA + keyboard on a site end-to-end, logging findings in structured format — dress rehearsal for Mock Audit #1 (2 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w4-study-cpacc": { description: "CPACC: Practice questions, review weak areas (6 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w4-study-dhs45": { description: "DHS Trusted Tester Modules 4–5 (4 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w4-biz-linkedin-draft": { description: "Draft anti-overlay LinkedIn article — 25% of lawsuits cite overlays, FTC fined accessiBe $1M, courts reject overlay defense. Write this week, publish Week 5.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w4-network-joel-prep": { description: "Work with Claude to build conversation outline + questions for Joel (Week 5 meeting). Bring Mock Audit #1 experience and screen reader questions.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w4-biz-linkedin-draft": { deferred: true, deferredTo: "Early August", description: "Draft anti-overlay LinkedIn article — 25% of lawsuits cite overlays, FTC fined accessiBe $1M, courts reject overlay defense. Write this week, publish Week 5.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w4-network-joel-prep": { deferred: true, deferredTo: "Late July / August", description: "Work with Claude to build conversation outline + questions for Joel (Week 5 meeting). Bring Mock Audit #1 experience and screen reader questions.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // WEEK 5
     "w5-admin-cpacc-apply": { description: "5/6: Submit CPACC exam application ($410) — application window opens 5/6, closes 5/20", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w5-admin-was-apply": { description: "5/6: Submit WAS screening application (free to submit — $455 exam fee only if approved) — closes 5/20", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-pick-store": { description: "Pick a real Shopify store (Panic Button tier — 5–10 pages)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-workflow": { description: "Run full workflow: axe-core scan → keyboard navigation → NVDA testing → JAWS testing → contrast spot-checks", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-checklist": { description: "Use the Top 20 Panic Button Checklist from the deep dive document as your testing protocol", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-alttext": { description: "Shopify-specific: Product image alt text coverage — spot-check 20+ products, not just pages you scan", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-cart-focus": { description: "Shopify-specific: Cart drawer/slideout focus management — does focus move into the drawer? Can you Tab out? Does focus return when closed?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-quickview": { description: "Shopify-specific: Quick-view modal keyboard trap test", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-thirdparty": { description: "Shopify-specific: Third-party app audit — list every third-party app visible, run axe on pages with each app loaded, note which introduce violations", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-dynamic": { description: "Shopify-specific: Dynamic price/inventory update — does screen reader announce 'Sale price' or 'Out of stock' changes?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-findings": { description: "Log all findings in structured format. Time yourself (target: under 10 hours). Write executive summary.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-buckets": { description: "Categorize findings: Fix directly / Fix with vendor / Mitigate or replace", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-mock-testimonial": { description: "Offer results to the business owner for free in exchange for a testimonial", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-pick-store": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Pick a real Shopify store (Panic Button tier — 5–10 pages)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-workflow": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Run full workflow: axe-core scan → keyboard navigation → NVDA testing → JAWS testing → contrast spot-checks", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-checklist": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Use the Top 20 Panic Button Checklist from the deep dive document as your testing protocol", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-alttext": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Shopify-specific: Product image alt text coverage — spot-check 20+ products, not just pages you scan", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-cart-focus": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Shopify-specific: Cart drawer/slideout focus management — does focus move into the drawer? Can you Tab out? Does focus return when closed?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-quickview": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Shopify-specific: Quick-view modal keyboard trap test", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-thirdparty": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Shopify-specific: Third-party app audit — list every third-party app visible, run axe on pages with each app loaded, note which introduce violations", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-dynamic": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Shopify-specific: Dynamic price/inventory update — does screen reader announce 'Sale price' or 'Out of stock' changes?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-findings": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Log all findings in structured format. Time yourself (target: under 10 hours). Write executive summary.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-buckets": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Categorize findings: Fix directly / Fix with vendor / Mitigate or replace", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-mock-testimonial": { deferred: true, deferredTo: "Post-vacation (July 15+)", description: "Offer results to the business owner for free in exchange for a testimonial", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w5-study-cpacc": { description: "CPACC: Final prep (4 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w5-study-dhs67": { description: "DHS Trusted Tester Modules 6–7 (4 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-study-confirm-networking": { description: "Confirm networking meetings are scheduled for Weeks 5–6 (Joel + first practitioner)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-biz-linkedin-publish": { description: "Publish anti-overlay LinkedIn article", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-biz-channels": { description: "Begin Channel 2 (community presence — Shopify forums, Reddit) and Channel 3 (direct outreach to recently-sued businesses)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-network-joel-schedule": { description: "Schedule coffee/Zoom with Joel Isaac this week", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w5-network-joel-audit": { description: "Share Mock Audit #1 findings with Joel and ask him to walk you through how he'd experience those issues. Use conversation outline built in Week 4.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-study-confirm-networking": { deferred: true, deferredTo: "Late July / August", description: "Confirm networking meetings are scheduled for Weeks 5–6 (Joel + first practitioner)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-biz-linkedin-publish": { deferred: true, deferredTo: "Early August", description: "Publish anti-overlay LinkedIn article", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-biz-channels": { deferred: true, deferredTo: "August", description: "Begin Channel 2 (community presence — Shopify forums, Reddit) and Channel 3 (direct outreach to recently-sued businesses)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-network-joel-schedule": { deferred: true, deferredTo: "Late July / August", description: "Schedule coffee/Zoom with Joel Isaac this week", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w5-network-joel-audit": { deferred: true, deferredTo: "Late July / August", description: "Share Mock Audit #1 findings with Joel and ask him to walk you through how he'd experience those issues. Use conversation outline built in Week 4.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // WEEK 6
     "w6-skills-nvda-new": { description: "NVDA + keyboard testing on 2 new sites you haven't seen before — keep building speed and pattern recognition (4 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w6-skills-focus": { description: "Focus on testing the interactive components that tripped you up in Mock Audit #1 (2 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w6-study-cpacc": { description: "CPACC: Intensive review — exam window opens 5/20 (8–10 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w6-study-dhs": { description: "DHS Trusted Tester: Maintain momentum (2–3 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w6-network-p1-prep": { description: "Work with Claude to build conversation outline + questions for Practitioner #1 meeting (Ellen, Mitchell, or Dale)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w6-network-p1-schedule": { description: "Schedule coffee/Zoom with one of your JPMC accessibility practitioner contacts this week", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w6-network-p1-prep": { deferred: true, deferredTo: "Late July / August", description: "Work with Claude to build conversation outline + questions for Practitioner #1 meeting (Ellen, Mitchell, or Dale)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w6-network-p1-schedule": { deferred: true, deferredTo: "Late July / August", description: "Schedule coffee/Zoom with one of your JPMC accessibility practitioner contacts this week", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // WEEK 7
     "w7-exam-cpacc": { description: "Take CPACC exam (5/20 or later) — 100 questions, 2 hours, online proctored via Pearson VUE. Results by 7/29/2026.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w7-skills-voiceover": { description: "VoiceOver on iPhone: swipe navigation, rotor controls, basic testing workflow (5 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w7-skills-voiceover-sites": { description: "Test 3 sites with VoiceOver — same sites tested on desktop", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w7-skills-voiceover": { deferred: true, deferredTo: "Post-vacation", description: "VoiceOver on iPhone: swipe navigation, rotor controls, basic testing workflow (5 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w7-skills-voiceover-sites": { deferred: true, deferredTo: "Post-vacation", description: "Test 3 sites with VoiceOver — same sites tested on desktop", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w7-study-dhs89": { description: "DHS Trusted Tester Modules 8–9 (4 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // WEEK 8
-    "w8-mock-pick-restaurant": { description: "Find a restaurant with online ordering, a menu PDF, and a reservation form — these are your target clients", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w8-mock-workflow": { description: "Full workflow including mobile VoiceOver spot-check + cognitive/content review", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w8-mock-menu-pdf": { description: "Restaurant-specific: Menu PDF — open in NVDA and PAC. Is it tagged? Is it a scanned image? Can a screen reader read menu items and prices?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w8-mock-ordering-widget": { description: "Restaurant-specific: Embedded ordering widget (Toast, Square, ChowNow, DoorDash) — test inside the iframe with NVDA and keyboard. Document every failure and note vendor.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w8-mock-date-picker": { description: "Restaurant-specific: Reservation form date picker — can you select a date keyboard-only? Does NVDA announce the selected date? Can you change the date?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w8-mock-location": { description: "Restaurant-specific: Location finder — is the address in real text or an image? Is the Google Maps embed supplemented with a text address?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w8-mock-hours": { description: "Restaurant-specific: Hours of operation — real text or image?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w8-mock-buckets": { description: "Categorize findings: Fix directly / Fix with vendor (include which vendor) / Mitigate or replace (include specific alternatives). Draft sample vendor outreach language for restaurant owner.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w8-mock-testimonial": { description: "Target: 12–15 hours. Offer results to the business owner for free in exchange for a testimonial.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-mock-pick-restaurant": { deferred: true, deferredTo: "Late July", description: "Find a restaurant with online ordering, a menu PDF, and a reservation form — these are your target clients", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-mock-workflow": { deferred: true, deferredTo: "Late July", description: "Full workflow including mobile VoiceOver spot-check + cognitive/content review", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-mock-menu-pdf": { deferred: true, deferredTo: "Late July", description: "Restaurant-specific: Menu PDF — open in NVDA and PAC. Is it tagged? Is it a scanned image? Can a screen reader read menu items and prices?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-mock-ordering-widget": { deferred: true, deferredTo: "Late July", description: "Restaurant-specific: Embedded ordering widget (Toast, Square, ChowNow, DoorDash) — test inside the iframe with NVDA and keyboard. Document every failure and note vendor.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-mock-date-picker": { deferred: true, deferredTo: "Late July", description: "Restaurant-specific: Reservation form date picker — can you select a date keyboard-only? Does NVDA announce the selected date? Can you change the date?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-mock-location": { deferred: true, deferredTo: "Late July", description: "Restaurant-specific: Location finder — is the address in real text or an image? Is the Google Maps embed supplemented with a text address?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-mock-hours": { deferred: true, deferredTo: "Late July", description: "Restaurant-specific: Hours of operation — real text or image?", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-mock-buckets": { deferred: true, deferredTo: "Late July", description: "Categorize findings: Fix directly / Fix with vendor (include which vendor) / Mitigate or replace (include specific alternatives). Draft sample vendor outreach language for restaurant owner.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-mock-testimonial": { deferred: true, deferredTo: "Late July", description: "Target: 12–15 hours. Offer results to the business owner for free in exchange for a testimonial.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w8-study-was1": { description: "Begin Deque WAS Exam Prep course — Domain 1 focus (4–6 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w8-study-dhs1011": { description: "DHS Trusted Tester Modules 10–11 (4 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w8-network-p2-prep": { description: "Work with Claude to build conversation outline + questions for Practitioner #2 (Ellen, Mitchell, or Dale). You now have restaurant mock audit findings.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w8-network-p2-schedule": { description: "Schedule coffee/Zoom with Practitioner #2 this week", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-network-p2-prep": { deferred: true, deferredTo: "Late July / August", description: "Work with Claude to build conversation outline + questions for Practitioner #2 (Ellen, Mitchell, or Dale). You now have restaurant mock audit findings.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w8-network-p2-schedule": { deferred: true, deferredTo: "Late July / August", description: "Schedule coffee/Zoom with Practitioner #2 this week", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // WEEK 9
     "w9-admin-was-followup": { description: "If WAS screening approval hasn't arrived yet, follow up with IAAP. You need approval before exam window closes 6/17.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
@@ -665,33 +1079,33 @@ const SEED_DATA = {
     "w10-exam-dhs-linkedin": { description: "Update LinkedIn immediately with DHS Trusted Tester certification", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w10-exam-dhs-website": { description: "Update Steadfast Accessibility website and all marketing materials with DHS Trusted Tester certification", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w10-study-was": { description: "WAS: ARIA deep dive, WCAG success criteria review, practice questions (8–10 hrs). Use your legal risk mapping from Week 3 — extra time on 🔴 criteria.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w10-network-p3-prep": { description: "Work with Claude to build conversation outline + questions for Practitioner #3. You now have DHS Trusted Tester cert, 2 mock audits, possibly first client.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w10-network-p3-schedule": { description: "Schedule coffee/Zoom with Practitioner #3 this week", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w10-network-p3-prep": { deferred: true, deferredTo: "Late July / August", description: "Work with Claude to build conversation outline + questions for Practitioner #3. You now have DHS Trusted Tester cert, 2 mock audits, possibly first client.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w10-network-p3-schedule": { deferred: true, deferredTo: "Late July / August", description: "Schedule coffee/Zoom with Practitioner #3 this week", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // WEEK 11
-    "w11-mock-pick-complex": { description: "Pick a complex site (Stay Protected tier — 15+ pages, PDFs, forms, interactive components)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w11-mock-workflow": { description: "Full workflow including mobile testing + PDF testing", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w11-mock-fix-direct": { description: "Fix directly: step-by-step instructions with screenshots, referencing the specific platform (Shopify admin, WooCommerce, Squarespace)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w11-mock-fix-vendor": { description: "Fix with vendor: documented findings + draft vendor outreach", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w11-mock-mitigate": { description: "Mitigate or replace: specific alternative recommendations with rationale", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w11-mock-summary": { description: "Write complete executive summary + remediation roadmap + compliance posture statement. This is your portfolio piece. Target: 15–18 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w11-mock-testimonial": { description: "Offer results to the business owner for free in exchange for a testimonial", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w11-mock-pick-complex": { deferred: true, deferredTo: "August", description: "Pick a complex site (Stay Protected tier — 15+ pages, PDFs, forms, interactive components)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w11-mock-workflow": { deferred: true, deferredTo: "August", description: "Full workflow including mobile testing + PDF testing", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w11-mock-fix-direct": { deferred: true, deferredTo: "August", description: "Fix directly: step-by-step instructions with screenshots, referencing the specific platform (Shopify admin, WooCommerce, Squarespace)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w11-mock-fix-vendor": { deferred: true, deferredTo: "August", description: "Fix with vendor: documented findings + draft vendor outreach", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w11-mock-mitigate": { deferred: true, deferredTo: "August", description: "Mitigate or replace: specific alternative recommendations with rationale", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w11-mock-summary": { deferred: true, deferredTo: "August", description: "Write complete executive summary + remediation roadmap + compliance posture statement. This is your portfolio piece. Target: 15–18 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w11-mock-testimonial": { deferred: true, deferredTo: "August", description: "Offer results to the business owner for free in exchange for a testimonial", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w11-study-was": { description: "WAS: Final review, weak areas only (4–6 hrs)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // WEEK 12
     "w12-exam-was": { description: "Take WAS exam (by 6/17 at latest) — 75 questions, 2 hours, online proctored via Pearson VUE. May/June exam window closes 6/17. Results by 7/29/2026.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w12-biz-templates": { description: "Build audit report templates from mock audits — create separate templates for e-commerce and restaurant clients", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w12-biz-templates": { deferred: true, deferredTo: "Post-vacation", description: "Build audit report templates from mock audits — create separate templates for e-commerce and restaurant clients", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w12-biz-service-page": { description: "Draft service page with confirmed credentials (DHS Trusted Tester + CPACC pending)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w12-biz-three-bucket": { description: "Create the three-bucket finding template (Fix directly / Fix with vendor / Mitigate or replace) as a reusable deliverable format", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w12-biz-three-bucket": { deferred: true, deferredTo: "Post-vacation", description: "Create the three-bucket finding template (Fix directly / Fix with vendor / Mitigate or replace) as a reusable deliverable format", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // WEEK 13
     "w13-biz-results": { description: "CPACC and WAS results expected by 7/29 — if either arrives early, update all materials immediately", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w13-biz-audit-tool": { description: "Finalize audit tool (parallel development track)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w13-biz-sample-deliverable": { description: "Create sample audit deliverable from best mock audit (sales collateral)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "w13-biz-linkedin-restaurant": { description: "Write second LinkedIn article — restaurant-specific: 'Your Restaurant Got a Demand Letter — Here's What's Actually Broken and What to Do About It.' Use anonymized findings from Mock Audit #2.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w13-biz-linkedin-restaurant": { deferred: true, deferredTo: "Late August", description: "Write second LinkedIn article — restaurant-specific: 'Your Restaurant Got a Demand Letter — Here's What's Actually Broken and What to Do About It.' Use anonymized findings from Mock Audit #2.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // WEEK 14
-    "w14-biz-publish-restaurant": { description: "Publish restaurant LinkedIn article", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "w14-biz-publish-restaurant": { deferred: true, deferredTo: "Late August", description: "Publish restaurant LinkedIn article", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w14-biz-insurance": { description: "E&O insurance in place", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w14-biz-entity": { description: "Entity structure finalized", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "w14-biz-kevin": { description: "Kevin conversation completed and documented", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
@@ -699,6 +1113,54 @@ const SEED_DATA = {
 
     // WEEK 15 (status review — no checkable tasks, just review)
     "w15-review-status": { description: "Review all credentials, skills, and milestones achieved across the 15-week program", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    // ─── EXAM BOOKING TASKS (new) ─────────────────────────────────────────────
+    "exam-cpacc-booked": { description: "CPACC exam booked at Pearson VUE (target: as soon as application submitted)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "exam-cpacc-completed": { description: "CPACC exam completed (May 20–23)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "exam-was-screening-approved": { description: "WAS screening approved by IAAP", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "exam-was-booked": { description: "WAS exam booked at Pearson VUE (target: June 3–10)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "exam-was-completed": { description: "WAS exam completed (June 3–10)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "exam-dhs-modules-complete": { description: "DHS Trusted Tester — all 11 modules complete", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "exam-dhs-practical-complete": { description: "DHS Trusted Tester practical exam completed (June 10–12)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "exam-vacation-responder": { description: "Vacation auto-responder set (June 22 – July 14)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+
+    // ─── SPRINT WEEK 1 (May 2–4) ─────────────────────────────────────────────
+    "sp1-cpacc-deque": { description: "CPACC: Finish Deque 'Accessibility Fundamentals'; begin IAAP Body of Knowledge Sections 1–2 (Disabilities, Assistive Technologies)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp1-dhs-m12": { description: "DHS Trusted Tester: Module 1 (Introduction); Module 2 (Trusted Tester Process)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp1-admin-calendar": { description: "Admin: Block 13–14 hrs/wk on calendar through June 15", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp1-admin-nvda": { description: "Admin: Confirm NVDA installed and functional on Windows PC", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+
+    // ─── SPRINT WEEK 2 (May 5–11) ────────────────────────────────────────────
+    "sp2-cpacc-deque": { description: "CPACC: Deque Prep Modules 1–3 (Standards, Universal Design, Disabilities); IAAP BoK Sections 3–4 (Standards, Laws & Management); create cheat sheet: ADA / Section 508 / ACA / EN 301 549", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp2-was-domain1a": { description: "WAS: Deque WAS Exam Prep — Domain 1 overview (first half only)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp2-dhs-m34": { description: "DHS Trusted Tester: Module 3 (Using Screen Readers); Module 4 (Keyboard Accessibility)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp2-admin-confirm": { description: "Admin: Confirm exam appointments are confirmed and on calendar", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+
+    // ─── SPRINT WEEK 3 (May 12–18) ───────────────────────────────────────────
+    "sp3-cpacc-deque": { description: "CPACC: Deque Prep Modules 4–6 (AT, Business Case, User Testing); IAAP BoK Sections 5–6 (Screen Readers, Testing Methods); Practice Questions 1–50, review all wrong answers", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp3-was-domain12": { description: "WAS: Deque Domain 1 (finish); Domain 2 overview — WAI-ARIA roles vs. properties vs. states", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp3-dhs-m5-nvda": { description: "DHS Trusted Tester: Module 5 (Interactive Elements); NVDA hands-on — test 2 real websites using H, F, T, Tab, arrows, Insert+F7", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp3-admin-confirm": { description: "Admin: Confirm CPACC exam time slot; if WAS screening approved, book exam for June 3–10", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+
+    // ─── SPRINT WEEK 4 (May 19–25) ───────────────────────────────────────────
+    "sp4-cpacc-preexam": { description: "CPACC pre-exam (6h): Speed review IAAP BoK weak areas; Practice Questions 51–100; forum review for gotchas; REST DAY before exam — light cheat sheet review only", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp4-was-domain2": { description: "WAS: Domain 2 deep dive — landmarks, live regions, common ARIA patterns; WCAG 2.1 review: 1.1.1, 1.3.1, 2.1.1, 4.1.2", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp4-dhs-m67": { description: "DHS Trusted Tester: Module 6 (Forms and Error Identification); Module 7 (Tables); optional NVDA table navigation practice", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp4-admin-was-confirm": { description: "Admin: Confirm WAS screening approval; book WAS exam if not already done", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+
+    // ─── SPRINT WEEK 5 (May 26 – Jun 1) ─────────────────────────────────────
+    "sp5-was-domain3": { description: "WAS: Domain 3 (Web Accessibility Testing); WCAG 2.1 deep review — print success criteria list, mark weak areas; Practice Questions 1–40; ARIA cheat sheet (top 10 roles)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp5-dhs-m89": { description: "DHS Trusted Tester: Module 8 (Images); Module 9 (Color and Sensory); full timed mock practical test of a webpage using DHS process", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp5-admin-confirm": { description: "Admin: Confirm WAS exam is scheduled for June 3–10; if CPACC results arrive early, log pass/fail", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+
+    // ─── SPRINT WEEK 6 (Jun 2–8) ─────────────────────────────────────────────
+    "sp6-was-preexam": { description: "WAS pre-exam (5h): Review weak areas ONLY — do NOT re-read everything; Practice Questions 41–75; speed review top 20 WCAG failures cheat sheet", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp6-dhs-m1011": { description: "DHS Trusted Tester: Module 10 (Multimedia); Module 11 (Timing and Conformance); full DHS practical mock test on complex page, self-grade", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp6-admin-retake": { description: "Admin: If WAS retake needed, schedule immediately for June 10–15; draft (do NOT publish) LinkedIn vacation update; build pre-vacation task list for July 15 return", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+
+    // ─── SPRINT WEEK 7 (Jun 9–15) ────────────────────────────────────────────
+    "sp7-dhs-exam": { description: "DHS Trusted Tester: Take practical exam (must score 85%+; results are instant); if failed, review and retake immediately", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp7-buffer": { description: "Buffer (3h): WAS retake if needed (cram + retake); if all exams done — rest or light review", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp7-admin-wind-down": { description: "Admin: Confirm all exam completions logged; finalize 'first week back' task list; last-minute calendar protection for any remaining study", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
   },
 
   weeks: [
@@ -927,6 +1389,32 @@ const LOGIN_HTML = `<!DOCTYPE html>
 </html>`;
 
 // ─── Worker ────────────────────────────────────────────────────────────────────
+
+// ─── migrateData: add new tasks + deferred fields to existing KV data ────────
+function migrateData(data) {
+  const SEED_TASKS = SEED_DATA.tasks;
+  let changed = false;
+  // Add any new tasks present in SEED_DATA but missing from KV
+  for (const [id, task] of Object.entries(SEED_TASKS)) {
+    if (!data.tasks[id]) {
+      data.tasks[id] = JSON.parse(JSON.stringify(task));
+      changed = true;
+    } else {
+      // Backfill deferred flags if missing
+      if (SEED_TASKS[id].deferred !== undefined && data.tasks[id].deferred === undefined) {
+        data.tasks[id].deferred = SEED_TASKS[id].deferred;
+        data.tasks[id].deferredTo = SEED_TASKS[id].deferredTo;
+        changed = true;
+      }
+    }
+  }
+  if (changed) {
+    data.meta.totalTasks = Object.keys(data.tasks).length;
+    data.meta.completedTasks = Object.values(data.tasks).filter(t => t.completed).length;
+  }
+  return { data, changed };
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -1016,6 +1504,8 @@ export default {
     if (subpath === '/api/data' && request.method === 'GET') {
       let data = await env.DIARY_DATA.get('diary', { type: 'json' });
       if (!data) data = SEED_DATA;
+      // Always overlay latest weeks structure from code
+      data.weeks = JSON.parse(JSON.stringify(SEED_DATA.weeks));
       // Backfill pushedToWeek/pushedFromWeek for existing tasks that predate the feature
       Object.values(data.tasks).forEach(t => {
         if (t.pushedToWeek === undefined) t.pushedToWeek = null;
@@ -1101,12 +1591,21 @@ export default {
     if (!data) {
       data = JSON.parse(JSON.stringify(SEED_DATA));
       await env.DIARY_DATA.put('diary', JSON.stringify(data));
+    } else {
+      // Always use latest code structure for weeks (handles structural changes)
+      data.weeks = JSON.parse(JSON.stringify(SEED_DATA.weeks));
+      // Backfill pushedToWeek/pushedFromWeek for existing tasks
+      Object.values(data.tasks).forEach(t => {
+        if (t.pushedToWeek === undefined) t.pushedToWeek = null;
+        if (t.pushedFromWeek === undefined) t.pushedFromWeek = null;
+      });
+      // Migrate: add new tasks + deferred flags
+      const migration = migrateData(data);
+      data = migration.data;
+      if (migration.changed) {
+        await env.DIARY_DATA.put('diary', JSON.stringify(data));
+      }
     }
-    // Backfill pushedToWeek/pushedFromWeek for existing tasks
-    Object.values(data.tasks).forEach(t => {
-      if (t.pushedToWeek === undefined) t.pushedToWeek = null;
-      if (t.pushedFromWeek === undefined) t.pushedFromWeek = null;
-    });
     // Fix all API paths to use /diary prefix
     const appHtml = HTML
       .replace(/fetch\('\/api\//g, "fetch('/diary/api/")
