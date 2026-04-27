@@ -212,8 +212,8 @@ const HTML = `<!DOCTYPE html>
       <div class="current-week-badge" id="current-week-badge">Week —</div>
       <a href="/diary/logout" class="logout-link">Sign out</a>
     <div class="view-tabs">
-      <button class="view-tab active" id="tab-original" onclick="setView('original')">&#128203; Original 15-Week Plan</button>
-      <button class="view-tab" id="tab-fasttrack" onclick="setView('fast-track')">&#9889; Fast Track: 7-Week Sprint</button>
+      <button class="view-tab" id="tab-original" onclick="setView('original')">&#128203; Original 15-Week Plan</button>
+      <button class="view-tab active" id="tab-fasttrack" onclick="setView('fast-track')">&#9889; Fast Track: 7-Week Sprint</button>
     </div>
   </div>
 </header>
@@ -251,7 +251,7 @@ function getCurrentWeek() {
 let allData = null;
 
 // ─── View state ──────────────────────────────────────────────────────────────
-let activeView = 'original';
+let activeView = 'fast-track';
 function setView(v) {
   activeView = v;
   document.getElementById('tab-original').classList.toggle('active', v === 'original');
