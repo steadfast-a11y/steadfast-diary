@@ -738,39 +738,43 @@ const SPRINT_WEEKS = [
       { name: 'Admin (2h)', taskIds: ['sp1-admin-calendar', 'sp1-admin-nvda'] }
     ]
   },
-  { sprintNum: 2, title: 'CPACC Deep Dive + DHS Screen Readers', dates: 'May 5–11, 2026', hours: '14 hours', isShortWeek: false,
+  { sprintNum: 2, title: 'CPACC Deep Dive + DHS Screen Readers + WAS Foundation', dates: 'May 5–11, 2026', hours: '18 hours', isShortWeek: false,
     critical: 'CRITICAL: May 6 — Submit CPACC application ($410); submit WAS screening application (free); book CPACC exam for May 20–23',
     categories: [
       { name: 'CPACC (7h)', taskIds: ['sp2-cpacc-deque'] },
       { name: 'WAS (2h)', taskIds: ['sp2-was-domain1a'] },
       { name: 'DHS Trusted Tester (3h)', taskIds: ['sp2-dhs-m34'] },
+      { name: 'Skills — WAS prep foundation (4h)', taskIds: ['sp2-skills-nvda-basics', 'sp2-skills-keyboard-basics'] },
       { name: 'Admin (2h)', taskIds: ['w5-admin-cpacc-apply', 'w5-admin-was-apply', 'exam-cpacc-booked', 'sp2-admin-confirm'] }
     ]
   },
-  { sprintNum: 3, title: 'CPACC Cram + WAS Kickoff + NVDA Practice', dates: 'May 12–18, 2026', hours: '14 hours', isShortWeek: false,
+  { sprintNum: 3, title: 'CPACC Cram + WAS Kickoff + NVDA Practice', dates: 'May 12–18, 2026', hours: '17 hours', isShortWeek: false,
     critical: null,
     categories: [
       { name: 'CPACC (7h)', taskIds: ['sp3-cpacc-deque'] },
       { name: 'WAS (3h)', taskIds: ['sp3-was-domain12'] },
       { name: 'DHS Trusted Tester (3h)', taskIds: ['sp3-dhs-m5-nvda'] },
+      { name: 'Skills — WAS prep applied (3h)', taskIds: ['sp3-skills-nvda-ecommerce'] },
       { name: 'Admin (1h)', taskIds: ['sp3-admin-confirm'] }
     ]
   },
-  { sprintNum: 4, title: 'CPACC Exam + WAS ARIA + DHS Forms/Tables', dates: 'May 19–25, 2026', hours: '14 hours', isShortWeek: false,
+  { sprintNum: 4, title: 'CPACC Exam + WAS ARIA + DHS Forms/Tables', dates: 'May 19–25, 2026', hours: '18 hours', isShortWeek: false,
     critical: 'CRITICAL: Take CPACC Exam (May 20–23)',
     categories: [
       { name: 'CPACC pre-exam (6h)', taskIds: ['sp4-cpacc-preexam'] },
       { name: 'Exam', taskIds: ['exam-cpacc-completed'] },
       { name: 'WAS (4h)', taskIds: ['sp4-was-domain2'] },
       { name: 'DHS Trusted Tester (3h)', taskIds: ['sp4-dhs-m67'] },
+      { name: 'Skills — WAS prep ARIA (4h, post-CPACC weekend)', taskIds: ['sp4-skills-aria-patterns'] },
       { name: 'Admin (1h)', taskIds: ['exam-was-screening-approved', 'exam-was-booked', 'sp4-admin-was-confirm'] }
     ]
   },
-  { sprintNum: 5, title: 'WAS Intensive + DHS Practical Prep', dates: 'May 26–Jun 1, 2026', hours: '14 hours', isShortWeek: false,
+  { sprintNum: 5, title: 'WAS Intensive + DHS Practical Prep', dates: 'May 26–Jun 1, 2026', hours: '20–23 hours', isShortWeek: false,
     critical: null,
     categories: [
       { name: 'WAS (8h)', taskIds: ['sp5-was-domain3'] },
       { name: 'DHS Trusted Tester (4h)', taskIds: ['sp5-dhs-m89'] },
+      { name: 'Skills — WAS prep synthesis (6–9h)', taskIds: ['sp5-skills-jaws', 'sp5-skills-snippet-drills', 'sp5-skills-mock-mini'] },
       { name: 'Admin (2h)', taskIds: ['sp5-admin-confirm'] }
     ]
   },
@@ -1134,23 +1138,30 @@ const SEED_DATA = {
     "sp2-was-domain1a": { description: "WAS: Deque WAS Exam Prep — Domain 1 overview (first half only)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp2-dhs-m34": { description: "DHS Trusted Tester: Module 3 (Using Screen Readers); Module 4 (Keyboard Accessibility)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp2-admin-confirm": { description: "Admin: Confirm exam appointments are confirmed and on calendar", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp2-skills-nvda-basics": { description: "WAS PREP — NVDA fundamentals: command memorization (H headings, F forms, T tables, Tab interactive, arrow keys reading, Insert+F7 elements list). Navigate 1 e-commerce site end-to-end with NVDA only. 2 hrs. Foundation for sp3 applied practice.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp2-skills-keyboard-basics": { description: "WAS PREP — Keyboard fundamentals: Tab / Shift+Tab / Enter / Escape on 1 site. Identify focus indicators (or lack thereof). Locate any focus traps. 2 hrs. Foundation for sp4 ARIA pattern practice.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // ─── SPRINT WEEK 3 (May 12–18) ───────────────────────────────────────────
     "sp3-cpacc-deque": { description: "CPACC: Deque Prep Modules 4–6 (AT, Business Case, User Testing); IAAP BoK Sections 5–6 (Screen Readers, Testing Methods); Practice Questions 1–50, review all wrong answers", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp3-was-domain12": { description: "WAS: Deque Domain 1 (finish); Domain 2 overview — WAI-ARIA roles vs. properties vs. states", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp3-dhs-m5-nvda": { description: "DHS Trusted Tester: Module 5 (Interactive Elements); NVDA hands-on — test 2 real websites using H, F, T, Tab, arrows, Insert+F7", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp3-admin-confirm": { description: "Admin: Confirm CPACC exam time slot; if WAS screening approved, book exam for June 3–10", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp3-skills-nvda-ecommerce": { description: "WAS PREP — NVDA on e-commerce: cart, checkout, form errors, modals, dynamic content. 3 hrs. Builds on sp2 NVDA basics. Goal: internalize what NVDA announces for each pattern so WAS exam questions feel concrete, not abstract.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // ─── SPRINT WEEK 4 (May 19–25) ───────────────────────────────────────────
     "sp4-cpacc-preexam": { description: "CPACC pre-exam (6h): Speed review IAAP BoK weak areas; Practice Questions 51–100; forum review for gotchas; REST DAY before exam — light cheat sheet review only", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp4-was-domain2": { description: "WAS: Domain 2 deep dive — landmarks, live regions, common ARIA patterns; WCAG 2.1 review: 1.1.1, 1.3.1, 2.1.1, 4.1.2", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp4-dhs-m67": { description: "DHS Trusted Tester: Module 6 (Forms and Error Identification); Module 7 (Tables); optional NVDA table navigation practice", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp4-admin-was-confirm": { description: "Admin: Confirm WAS screening approval; book WAS exam if not already done", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp4-skills-aria-patterns": { description: "WAS PREP — Clone W3C ARIA Authoring Practices (github.com/w3c/aria-practices). Test 5 patterns with NVDA + keyboard: combobox, modal dialog, accordion, tabs, menu. Read each pattern's source. 4 hrs. Worth ~10–15 WAS exam questions.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // ─── SPRINT WEEK 5 (May 26 – Jun 1) ─────────────────────────────────────
     "sp5-was-domain3": { description: "WAS: Domain 3 (Web Accessibility Testing); WCAG 2.1 deep review — print success criteria list, mark weak areas; Practice Questions 1–40; ARIA cheat sheet (top 10 roles)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp5-dhs-m89": { description: "DHS Trusted Tester: Module 8 (Images); Module 9 (Color and Sensory); full timed mock practical test of a webpage using DHS process", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp5-admin-confirm": { description: "Admin: Confirm WAS exam is scheduled for June 3–10; if CPACC results arrive early, log pass/fail", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp5-skills-jaws": { description: "WAS PREP — JAWS exposure: command differences from NVDA, test the same e-commerce sites with JAWS. WAS sometimes asks JAWS-vs-NVDA behavior questions. 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp5-skills-snippet-drills": { description: "WAS PREP — WCAG/ARIA 'translate the snippet' drills: take 20 code snippets (axe-core test fixtures, WCAG techniques), predict what's wrong + which SC + what NVDA announces. Verify by testing. Most direct WAS-question-to-practice mapping. 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp5-skills-mock-mini": { description: "WAS PREP — Mock mini-audit (optional but high-value): pick a single page, run full battery — automated → keyboard → NVDA → contrast. Builds 'I have done a real audit' anchor for exam methodology questions. 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // ─── SPRINT WEEK 6 (Jun 2–8) ─────────────────────────────────────────────
     "sp6-was-preexam": { description: "WAS pre-exam (5h): Review weak areas ONLY — do NOT re-read everything; Practice Questions 41–75; speed review top 20 WCAG failures cheat sheet", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
