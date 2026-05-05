@@ -738,86 +738,70 @@ const SPRINT_WEEKS = [
       { name: 'Admin (2h)', taskIds: ['sp1-admin-calendar', 'sp1-admin-nvda'] }
     ]
   },
-  { sprintNum: 2, title: 'CPACC Deep Dive + DHS Screen Readers + WAS Foundation', dates: 'May 5–11, 2026', hours: '18 hours', isShortWeek: false,
-    critical: 'CRITICAL: May 6 — Submit CPACC application ($410); submit WAS screening application (free); book CPACC exam for May 20–23',
+  { sprintNum: 2, title: 'CPACC Deep Dive + Client Outreach Kickoff', dates: 'May 5–11, 2026', hours: '12 hours', isShortWeek: false,
+    critical: 'CRITICAL: Await CPACC application approval (~May 12); book Pearson VUE exam slot (target: May 21–23). WAS + DHS Trusted Tester pursuits cancelled 2026-05-05 — see ada-consulting/2026-05-05-was-dhs-pivot-completion.md.',
     categories: [
       { name: 'CPACC (7h)', taskIds: ['sp2-cpacc-deque'] },
-      { name: 'WAS (2h)', taskIds: ['sp2-was-domain1a'] },
-      { name: 'DHS Trusted Tester (3h)', taskIds: ['sp2-dhs-m34'] },
-      { name: 'Skills — WAS prep foundation (4h)', taskIds: ['sp2-skills-nvda-basics', 'sp2-skills-keyboard-basics'] },
-      { name: 'Admin (2h)', taskIds: ['w5-admin-cpacc-apply', 'w5-admin-was-apply', 'exam-cpacc-booked', 'sp2-admin-confirm'] }
+      { name: 'Business (4h)', taskIds: ['sp2-biz-outreach', 'sp2-biz-website-update'] },
+      { name: 'Admin (1h)', taskIds: ['w5-admin-cpacc-apply', 'exam-cpacc-booked', 'sp2-admin-confirm'] }
     ]
   },
-  { sprintNum: 3, title: 'CPACC Cram + WAS Kickoff + NVDA Practice', dates: 'May 12–18, 2026', hours: '17 hours', isShortWeek: false,
+  { sprintNum: 3, title: 'CPACC Cram + Outreach Continued', dates: 'May 12–18, 2026', hours: '12 hours', isShortWeek: false,
     critical: null,
     categories: [
-      { name: 'CPACC (7h)', taskIds: ['sp3-cpacc-deque'] },
-      { name: 'WAS (3h)', taskIds: ['sp3-was-domain12'] },
-      { name: 'DHS Trusted Tester (3h)', taskIds: ['sp3-dhs-m5-nvda'] },
-      { name: 'Skills — WAS prep applied (3h)', taskIds: ['sp3-skills-nvda-ecommerce'] },
+      { name: 'CPACC (5h)', taskIds: ['sp3-cpacc-deque'] },
+      { name: 'CPACC practice (3h)', taskIds: ['sp3-cpacc-practice'] },
+      { name: 'Business (3h)', taskIds: ['sp3-biz-outreach'] },
       { name: 'Admin (1h)', taskIds: ['sp3-admin-confirm'] }
     ]
   },
-  { sprintNum: 4, title: 'CPACC Exam + WAS ARIA + DHS Forms/Tables', dates: 'May 19–25, 2026', hours: '18 hours', isShortWeek: false,
-    critical: 'CRITICAL: Take CPACC Exam (May 20–23)',
+  { sprintNum: 4, title: 'CPACC Exam + Pilot Audit Kickoff', dates: 'May 19–25, 2026', hours: '10 hours', isShortWeek: false,
+    critical: 'CRITICAL: Take CPACC Exam (May 21–23)',
     categories: [
-      { name: 'CPACC pre-exam (6h)', taskIds: ['sp4-cpacc-preexam'] },
+      { name: 'CPACC pre-exam (4h)', taskIds: ['sp4-cpacc-preexam'] },
       { name: 'Exam', taskIds: ['exam-cpacc-completed'] },
-      { name: 'WAS (4h)', taskIds: ['sp4-was-domain2'] },
-      { name: 'DHS Trusted Tester (3h)', taskIds: ['sp4-dhs-m67'] },
-      { name: 'Skills — WAS prep ARIA (4h, post-CPACC weekend)', taskIds: ['sp4-skills-aria-patterns'] },
-      { name: 'Admin (1h)', taskIds: ['exam-was-screening-approved', 'exam-was-booked', 'sp4-admin-was-confirm'] }
+      { name: 'Business — pilot audit (3h, post-exam)', taskIds: ['sp4-biz-pilot-audit'] },
+      { name: 'Business — credential update (2h, post-pass)', taskIds: ['sp4-biz-website-cpacc'] },
+      { name: 'Admin (1h)', taskIds: ['sp4-admin-cpacc-result'] }
     ]
   },
-  { sprintNum: 5, title: 'WAS Intensive + DHS Practical Prep', dates: 'May 26–Jun 1, 2026', hours: '20–23 hours', isShortWeek: false,
+  { sprintNum: 5, title: 'First Paying Client', dates: 'May 26–Jun 1, 2026', hours: '12 hours', isShortWeek: false,
+    critical: 'CRITICAL: Land first paying client — convert warm outreach to signed scope',
+    categories: [
+      { name: 'Business — client kickoff (4h)', taskIds: ['sp5-biz-client-kickoff'] },
+      { name: 'Business — methodology (3h)', taskIds: ['sp5-biz-methodology'] },
+      { name: 'Business — content (2h)', taskIds: ['sp5-biz-content'] },
+      { name: 'Business — outreach (3h)', taskIds: ['sp5-biz-outreach'] }
+    ]
+  },
+  { sprintNum: 6, title: 'Client Audit Delivery + Case Study', dates: 'Jun 2–8, 2026', hours: '12 hours', isShortWeek: false,
+    critical: 'CRITICAL: Deliver first paid audit deliverable',
+    categories: [
+      { name: 'Business — audit delivery (8h)', taskIds: ['sp6-biz-audit-delivery'] },
+      { name: 'Business — case study (2h)', taskIds: ['sp6-biz-case-study'] },
+      { name: 'Business — pipeline (2h)', taskIds: ['sp6-biz-pipeline'] }
+    ]
+  },
+  { sprintNum: 7, title: 'Pipeline Polish + Travel Prep', dates: 'Jun 9–15, 2026', hours: '10 hours', isShortWeek: false,
     critical: null,
     categories: [
-      { name: 'WAS (8h)', taskIds: ['sp5-was-domain3'] },
-      { name: 'DHS Trusted Tester (4h)', taskIds: ['sp5-dhs-m89'] },
-      { name: 'Skills — WAS prep synthesis (6–9h)', taskIds: ['sp5-skills-jaws', 'sp5-skills-snippet-drills', 'sp5-skills-mock-mini'] },
-      { name: 'Admin (2h)', taskIds: ['sp5-admin-confirm'] }
-    ]
-  },
-  { sprintNum: 6, title: 'WAS Exam + DHS Final Modules + Retake Buffer', dates: 'Jun 2–8, 2026', hours: '14 hours', isShortWeek: false,
-    critical: 'CRITICAL: Take WAS Exam (June 3–8)',
-    categories: [
-      { name: 'WAS pre-exam (5h)', taskIds: ['sp6-was-preexam'] },
-      { name: 'Exam', taskIds: ['exam-was-completed'] },
-      { name: 'DHS Trusted Tester (4h)', taskIds: ['sp6-dhs-m1011'] },
-      { name: 'Admin (5h)', taskIds: ['sp6-admin-retake'] }
-    ]
-  },
-  { sprintNum: 7, title: 'DHS Exam + Final Buffer + Wind Down', dates: 'Jun 9–15, 2026', hours: '10–12 hours', isShortWeek: false,
-    critical: 'CRITICAL: Take DHS Trusted Tester Practical Exam (June 10–12)',
-    categories: [
-      { name: 'DHS Trusted Tester (4h)', taskIds: ['sp7-dhs-exam'] },
-      { name: 'Exam', taskIds: ['exam-dhs-modules-complete', 'exam-dhs-practical-complete'] },
-      { name: 'Buffer (3h)', taskIds: ['sp7-buffer'] },
-      { name: 'Admin (3–5h)', taskIds: ['sp7-admin-wind-down', 'exam-vacation-responder'] }
+      { name: 'Business — deliverable polish (4h)', taskIds: ['sp7-biz-deliverable-polish'] },
+      { name: 'Business — pipeline follow-up (3h)', taskIds: ['sp7-biz-pipeline-followup'] },
+      { name: 'Admin (3h)', taskIds: ['sp7-admin-wind-down', 'exam-vacation-responder'] }
     ]
   }
 ];
 
 const EXAM_BOOKINGS = [
-  { taskId: 'w5-admin-cpacc-apply',     label: 'CPACC application submitted',                    target: 'target: May 6' },
-  { taskId: 'exam-cpacc-booked',        label: 'CPACC exam booked at Pearson VUE',                target: '' },
-  { taskId: 'exam-cpacc-completed',     label: 'CPACC exam completed',                            target: 'May 20–23' },
-  { taskId: 'w5-admin-was-apply',       label: 'WAS screening application submitted',             target: 'target: May 6' },
-  { taskId: 'exam-was-screening-approved', label: 'WAS screening approved by IAAP',               target: '' },
-  { taskId: 'exam-was-booked',          label: 'WAS exam booked at Pearson VUE',                  target: '' },
-  { taskId: 'exam-was-completed',       label: 'WAS exam completed',                              target: 'June 3–10' },
-  { taskId: 'exam-dhs-modules-complete',label: 'DHS Trusted Tester — all 11 modules complete', target: '' },
-  { taskId: 'exam-dhs-practical-complete', label: 'DHS Trusted Tester practical exam completed',  target: 'June 10–12' },
+  { taskId: 'w5-admin-cpacc-apply',     label: 'CPACC application submitted',                    target: 'submitted May 5' },
+  { taskId: 'exam-cpacc-booked',        label: 'CPACC exam booked at Pearson VUE',                target: 'target: ~May 13' },
+  { taskId: 'exam-cpacc-completed',     label: 'CPACC exam completed',                            target: 'May 21–23' },
   { taskId: 'exam-vacation-responder',  label: 'Vacation auto-responder set',                     target: 'June 22 – July 14' }
 ];
 
 const DEADLINE_BANNERS = [
-  { text: 'CPACC + WAS applications open — SUBMIT TODAY', date: '2026-05-06', type: 'deadline' },
-  { text: 'Application window closes — LAST CHANCE to apply', date: '2026-05-20', type: 'deadline' },
   { text: 'CPACC exam window — book Pearson VUE if not done', start: '2026-05-20', end: '2026-05-23', type: 'window' },
-  { text: 'WAS exam window', start: '2026-06-03', end: '2026-06-10', type: 'window' },
-  { text: 'DHS Trusted Tester practical exam', start: '2026-06-10', end: '2026-06-12', type: 'window' },
-  { text: 'Final retake deadline — exam window closes', date: '2026-06-17', type: 'deadline' },
+  { text: 'CPACC retake deadline — exam window closes', date: '2026-06-17', type: 'deadline' },
   { text: 'Vacation begins — set auto-responder', date: '2026-06-22', type: 'vacation' }
 ];
 
@@ -1140,20 +1124,27 @@ const SEED_DATA = {
     "sp2-admin-confirm": { description: "Admin: Confirm exam appointments are confirmed and on calendar", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp2-skills-nvda-basics": { description: "WAS PREP — NVDA fundamentals: command memorization (H headings, F forms, T tables, Tab interactive, arrow keys reading, Insert+F7 elements list). Navigate 1 e-commerce site end-to-end with NVDA only. 2 hrs. Foundation for sp3 applied practice.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp2-skills-keyboard-basics": { description: "WAS PREP — Keyboard fundamentals: Tab / Shift+Tab / Enter / Escape on 1 site. Identify focus indicators (or lack thereof). Locate any focus traps. 2 hrs. Foundation for sp4 ARIA pattern practice.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp2-biz-outreach": { description: "Business: Identify 5–10 SMB prospects in target ICP (e-commerce + restaurants in SF Bay Area). Research each, draft initial outreach. 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp2-biz-website-update": { description: "Business: Update leteveryonein.com homepage + About to credential-candidate phasing copy ('IAAP Professional Member. Coursework with Deque University, WebAIM, and Knowbility AccessU. CPACC certification candidate, exam scheduled May/June 2026.'). 1 hr.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // ─── SPRINT WEEK 3 (May 12–18) ───────────────────────────────────────────
     "sp3-cpacc-deque": { description: "CPACC: Deque Prep Modules 4–6 (AT, Business Case, User Testing); IAAP BoK Sections 5–6 (Screen Readers, Testing Methods); Practice Questions 1–50, review all wrong answers", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp3-was-domain12": { description: "WAS: Deque Domain 1 (finish); Domain 2 overview — WAI-ARIA roles vs. properties vs. states", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp3-dhs-m5-nvda": { description: "DHS Trusted Tester: Module 5 (Interactive Elements); NVDA hands-on — test 2 real websites using H, F, T, Tab, arrows, Insert+F7", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "sp3-admin-confirm": { description: "Admin: Confirm CPACC exam time slot; if WAS screening approved, book exam for June 3–10", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp3-admin-confirm": { description: "Admin: Confirm CPACC exam time slot is booked at Pearson VUE; verify Pearson VUE prep materials reviewed", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp3-skills-nvda-ecommerce": { description: "WAS PREP — NVDA on e-commerce: cart, checkout, form errors, modals, dynamic content. 3 hrs. Builds on sp2 NVDA basics. Goal: internalize what NVDA announces for each pattern so WAS exam questions feel concrete, not abstract.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp3-cpacc-practice": { description: "CPACC: Deque practice tests — 3 full sets, review every wrong answer, build flashcards for weak areas. 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp3-biz-outreach": { description: "Business: Continue prospect research, send initial outreach to 5–10 SMB targets, log responses. 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // ─── SPRINT WEEK 4 (May 19–25) ───────────────────────────────────────────
-    "sp4-cpacc-preexam": { description: "CPACC pre-exam (6h): Speed review IAAP BoK weak areas; Practice Questions 51–100; forum review for gotchas; REST DAY before exam — light cheat sheet review only", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp4-cpacc-preexam": { description: "CPACC pre-exam (4h): Speed review IAAP BoK weak areas; Practice Questions 51–100; forum review for gotchas; REST DAY before exam — light cheat sheet review only", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp4-was-domain2": { description: "WAS: Domain 2 deep dive — landmarks, live regions, common ARIA patterns; WCAG 2.1 review: 1.1.1, 1.3.1, 2.1.1, 4.1.2", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp4-dhs-m67": { description: "DHS Trusted Tester: Module 6 (Forms and Error Identification); Module 7 (Tables); optional NVDA table navigation practice", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp4-admin-was-confirm": { description: "Admin: Confirm WAS screening approval; book WAS exam if not already done", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp4-skills-aria-patterns": { description: "WAS PREP — Clone W3C ARIA Authoring Practices (github.com/w3c/aria-practices). Test 5 patterns with NVDA + keyboard: combobox, modal dialog, accordion, tabs, menu. Read each pattern's source. 4 hrs. Worth ~10–15 WAS exam questions.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp4-biz-pilot-audit": { description: "Business (post-CPACC, 3 hrs): Run a free pilot audit on a friendly target (own site, family/friend SMB) using axe + WAVE + manual keyboard pass. Generates portfolio artifact + practice for paid work.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp4-biz-website-cpacc": { description: "Business (post-exam pass, 2 hrs): Update leteveryonein.com to 'IAAP CPACC Certified' phasing once exam result confirmed. Embed Credly badge on About + Services. Add LinkedIn announcement post (do NOT publish until pass confirmed).", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp4-admin-cpacc-result": { description: "Admin: Log CPACC exam result (pass/fail). If pass: claim Credly badge, update website, post LinkedIn. If fail: book retake within exam window (by June 17).", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // ─── SPRINT WEEK 5 (May 26 – Jun 1) ─────────────────────────────────────
     "sp5-was-domain3": { description: "WAS: Domain 3 (Web Accessibility Testing); WCAG 2.1 deep review — print success criteria list, mark weak areas; Practice Questions 1–40; ARIA cheat sheet (top 10 roles)", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
@@ -1162,16 +1153,25 @@ const SEED_DATA = {
     "sp5-skills-jaws": { description: "WAS PREP — JAWS exposure: command differences from NVDA, test the same e-commerce sites with JAWS. WAS sometimes asks JAWS-vs-NVDA behavior questions. 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp5-skills-snippet-drills": { description: "WAS PREP — WCAG/ARIA 'translate the snippet' drills: take 20 code snippets (axe-core test fixtures, WCAG techniques), predict what's wrong + which SC + what NVDA announces. Verify by testing. Most direct WAS-question-to-practice mapping. 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp5-skills-mock-mini": { description: "WAS PREP — Mock mini-audit (optional but high-value): pick a single page, run full battery — automated → keyboard → NVDA → contrast. Builds 'I have done a real audit' anchor for exam methodology questions. 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp5-biz-client-kickoff": { description: "Business: Land first paying client. Convert one warm prospect from sp2/sp3 outreach into signed scope. Kickoff call, scoping doc, deposit invoice. 4 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp5-biz-content": { description: "Business: Publish 1–2 short pieces on LinkedIn drawing on CPACC + pilot-audit experience. ICP-relevant: 'what SMBs miss in WCAG audits,' demand-letter risk explainer. 2 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp5-biz-methodology": { description: "Business: Codify audit methodology — checklist, deliverable template, scoping questionnaire — drawing on CPACC framework + pilot audit lessons. 3 hrs. Reusable for every client after this one.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp5-biz-outreach": { description: "Business: Continue prospect outreach, follow up on sp2/sp3 contacts, build pipeline of 3–5 warm prospects for sprint 6+. 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // ─── SPRINT WEEK 6 (Jun 2–8) ─────────────────────────────────────────────
     "sp6-was-preexam": { description: "WAS pre-exam (5h): Review weak areas ONLY — do NOT re-read everything; Practice Questions 41–75; speed review top 20 WCAG failures cheat sheet", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp6-dhs-m1011": { description: "DHS Trusted Tester: Module 10 (Multimedia); Module 11 (Timing and Conformance); full DHS practical mock test on complex page, self-grade", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp6-admin-retake": { description: "Admin: If WAS retake needed, schedule immediately for June 10–15; draft (do NOT publish) LinkedIn vacation update; build pre-vacation task list for July 15 return", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp6-biz-audit-delivery": { description: "Business: Deliver first paid audit. Automated scan, manual keyboard run, NVDA pass, severity-ranked findings doc, executive summary, fix recommendations with WCAG SC mapping. 8 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp6-biz-case-study": { description: "Business: Draft case study (anonymized if required) from first paid audit — problem framing, methodology, findings, outcomes. Foundation for sales asset on leteveryonein.com. 2 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp6-biz-pipeline": { description: "Business: Re-engage second-tier prospects, schedule discovery calls for sprint 7, line up second paying client. 2 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
 
     // ─── SPRINT WEEK 7 (Jun 9–15) ────────────────────────────────────────────
     "sp7-dhs-exam": { description: "DHS Trusted Tester: Take practical exam (must score 85%+; results are instant); if failed, review and retake immediately", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
     "sp7-buffer": { description: "Buffer (3h): WAS retake if needed (cram + retake); if all exams done — rest or light review", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
-    "sp7-admin-wind-down": { description: "Admin: Confirm all exam completions logged; finalize 'first week back' task list; last-minute calendar protection for any remaining study", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp7-admin-wind-down": { description: "Admin: Confirm CPACC completion logged; finalize 'first week back' task list; last-minute calendar protection for client work + travel prep", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp7-biz-deliverable-polish": { description: "Business: Polish first-client deliverable to publishable case-study quality — sanitize for confidentiality, write narrative version for marketing, prep slide-friendly version for prospect calls. 4 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
+    "sp7-biz-pipeline-followup": { description: "Business: Pipeline follow-up on sprint 5/6 outreach — discovery calls, send proposals, hold next-client commitments through travel window (Jun 22 – Jul 14). 3 hrs.", completed: false, completedAt: null, journal: "", journalUpdatedAt: null },
   },
 
   weeks: [
