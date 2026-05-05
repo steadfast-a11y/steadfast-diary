@@ -1420,49 +1420,71 @@ export default {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // ── Credentials ──────────────────────────────────────────────────────────
-    const DIARY_USERNAME = 'a11y';
-    const DIARY_PASSWORD = 'a11y';
-    const SESSION_COOKIE_VALUE = 'steadfast-diary-authenticated';
+    // ── Credentials (from Worker Secrets — set via `wrangler secret put`) ────
+    // Required env: DIARY_USERNAME, DIARY_PASSWORD
+    // If either is missing, the Worker fails closed (all auth attempts fail).
+    const DIARY_USERNAME = env.DIARY_USERNAME;
+    const DIARY_PASSWORD = env.DIARY_PASSWORD;
+    const SESSION_TTL_SECONDS = 60 * 60 * 24 * 90; // 90 days
 
-    // ── Cookie auth check ────────────────────────────────────────────────────
-    function isAuthenticated() {
+    // ── Session helpers (random per-session token in KV; cookie value is the
+    //     KV key, never a guessable constant) ─────────────────────────────────
+    function newSessionId() {
+      const bytes = new Uint8Array(32);
+      crypto.getRandomValues(bytes);
+      return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function getSessionIdFromCookie() {
       const cookieHeader = request.headers.get('Cookie') || '';
-      const match = cookieHeader.match(/diary_auth=([^;]+)/);
-      if (!match) return false;
-      return match[1] === SESSION_COOKIE_VALUE;
+      const match = cookieHeader.match(/diary_auth=([a-f0-9]{64})(?:;|$)/);
+      return match ? match[1] : null;
     }
 
-    function authCookieHeader() {
-      // 90-day persistent cookie
-      return `diary_auth=${SESSION_COOKIE_VALUE}; Path=/diary; HttpOnly; Secure; SameSite=Lax; Max-Age=${60 * 60 * 24 * 90}`;
+    async function isAuthenticated() {
+      const sessionId = getSessionIdFromCookie();
+      if (!sessionId) return false;
+      const stored = await env.DIARY_DATA.get(`session:${sessionId}`);
+      return stored !== null;
     }
 
-    // ── GET /diary/login?u=a11y&p=a11y — fallback GET login ──────────────────
-    if (path === '/diary/login' && request.method === 'GET' &&
-        url.searchParams.get('u') === DIARY_USERNAME &&
-        url.searchParams.get('p') === DIARY_PASSWORD) {
-      return new Response('', {
-        status: 302,
-        headers: {
-          'Location': '/diary',
-          'Set-Cookie': authCookieHeader(),
-        }
-      });
+    async function createSessionAndCookieHeader() {
+      const sessionId = newSessionId();
+      await env.DIARY_DATA.put(
+        `session:${sessionId}`,
+        new Date().toISOString(),
+        { expirationTtl: SESSION_TTL_SECONDS }
+      );
+      return `diary_auth=${sessionId}; Path=/diary; HttpOnly; Secure; SameSite=Lax; Max-Age=${SESSION_TTL_SECONDS}`;
+    }
+
+    async function destroyCurrentSession() {
+      const sessionId = getSessionIdFromCookie();
+      if (sessionId) {
+        await env.DIARY_DATA.delete(`session:${sessionId}`);
+      }
+    }
+
+    function credentialsConfigured() {
+      return typeof DIARY_USERNAME === 'string' && DIARY_USERNAME.length > 0
+          && typeof DIARY_PASSWORD === 'string' && DIARY_PASSWORD.length > 0;
     }
 
     // ── POST /diary/login — handle login form submission ─────────────────────
     if (path === '/diary/login' && request.method === 'POST') {
+      if (!credentialsConfigured()) {
+        return new Response('Server misconfigured: DIARY_USERNAME / DIARY_PASSWORD secrets not set.', {
+          status: 503, headers: { 'Content-Type': 'text/plain' }
+        });
+      }
       const body = await request.formData();
       const username = (body.get('username') || '').trim();
       const password = (body.get('password') || '').trim();
       if (username === DIARY_USERNAME && password === DIARY_PASSWORD) {
+        const cookie = await createSessionAndCookieHeader();
         return new Response('', {
           status: 302,
-          headers: {
-            'Location': '/diary',
-            'Set-Cookie': authCookieHeader(),
-          }
+          headers: { 'Location': '/diary', 'Set-Cookie': cookie }
         });
       }
       return new Response(LOGIN_HTML.replace('__ERROR__', 'Incorrect username or password — try again.'), {
@@ -1473,6 +1495,7 @@ export default {
 
     // ── GET /diary/logout ────────────────────────────────────────────────────
     if (path === '/diary/logout') {
+      await destroyCurrentSession();
       return new Response('', {
         status: 302,
         headers: {
@@ -1490,7 +1513,7 @@ export default {
     }
 
     // ── All /diary* routes — require cookie auth ─────────────────────────────
-    if (!isAuthenticated()) {
+    if (!(await isAuthenticated())) {
       return new Response('', {
         status: 302,
         headers: { 'Location': '/diary/login' }
