@@ -730,7 +730,7 @@ function formatDate(iso) {
 
 // ─── Fast Track: Sprint data ──────────────────────────────────────────────────
 const SPRINT_WEEKS = [
-  { sprintNum: 1, title: 'Foundations', dates: 'May 2–4, 2026', hours: '6–8 hours', isShortWeek: true,
+  { sprintNum: 1, title: 'Foundations', dates: 'May 2–3, 2026', hours: '6–8 hours', isShortWeek: true,
     critical: null,
     categories: [
       { name: 'CPACC (4h)', taskIds: ['sp1-cpacc-deque'] },
@@ -738,7 +738,7 @@ const SPRINT_WEEKS = [
       { name: 'Admin (2h)', taskIds: ['sp1-admin-calendar', 'sp1-admin-nvda'] }
     ]
   },
-  { sprintNum: 2, title: 'CPACC Deep Dive + Client Outreach Kickoff', dates: 'May 5–11, 2026', hours: '12 hours', isShortWeek: false,
+  { sprintNum: 2, title: 'CPACC Deep Dive + Client Outreach Kickoff', dates: 'May 4–10, 2026', hours: '12 hours', isShortWeek: false,
     critical: 'CRITICAL: Await CPACC application approval (~May 12); book Pearson VUE exam slot (target: May 21–23). WAS + DHS Trusted Tester pursuits cancelled 2026-05-05 — see ada-consulting/2026-05-05-was-dhs-pivot-completion.md.',
     categories: [
       { name: 'CPACC (7h)', taskIds: ['sp2-cpacc-deque'] },
@@ -746,7 +746,7 @@ const SPRINT_WEEKS = [
       { name: 'Admin (1h)', taskIds: ['w5-admin-cpacc-apply', 'exam-cpacc-booked', 'sp2-admin-confirm'] }
     ]
   },
-  { sprintNum: 3, title: 'CPACC Cram + Outreach Continued', dates: 'May 12–18, 2026', hours: '12 hours', isShortWeek: false,
+  { sprintNum: 3, title: 'CPACC Cram + Outreach Continued', dates: 'May 11–17, 2026', hours: '12 hours', isShortWeek: false,
     critical: null,
     categories: [
       { name: 'CPACC (5h)', taskIds: ['sp3-cpacc-deque'] },
@@ -755,7 +755,7 @@ const SPRINT_WEEKS = [
       { name: 'Admin (1h)', taskIds: ['sp3-admin-confirm'] }
     ]
   },
-  { sprintNum: 4, title: 'CPACC Exam + Pilot Audit Kickoff', dates: 'May 19–25, 2026', hours: '10 hours', isShortWeek: false,
+  { sprintNum: 4, title: 'CPACC Exam + Pilot Audit Kickoff', dates: 'May 18–24, 2026', hours: '10 hours', isShortWeek: false,
     critical: 'CRITICAL: Take CPACC Exam (May 21–23)',
     categories: [
       { name: 'CPACC pre-exam (4h)', taskIds: ['sp4-cpacc-preexam'] },
@@ -765,7 +765,7 @@ const SPRINT_WEEKS = [
       { name: 'Admin (1h)', taskIds: ['sp4-admin-cpacc-result'] }
     ]
   },
-  { sprintNum: 5, title: 'First Paying Client', dates: 'May 26–Jun 1, 2026', hours: '12 hours', isShortWeek: false,
+  { sprintNum: 5, title: 'First Paying Client', dates: 'May 25–31, 2026', hours: '12 hours', isShortWeek: false,
     critical: 'CRITICAL: Land first paying client — convert warm outreach to signed scope',
     categories: [
       { name: 'Business — client kickoff (4h)', taskIds: ['sp5-biz-client-kickoff'] },
@@ -774,7 +774,7 @@ const SPRINT_WEEKS = [
       { name: 'Business — outreach (3h)', taskIds: ['sp5-biz-outreach'] }
     ]
   },
-  { sprintNum: 6, title: 'Client Audit Delivery + Case Study', dates: 'Jun 2–8, 2026', hours: '12 hours', isShortWeek: false,
+  { sprintNum: 6, title: 'Client Audit Delivery + Case Study', dates: 'Jun 1–7, 2026', hours: '12 hours', isShortWeek: false,
     critical: 'CRITICAL: Deliver first paid audit deliverable',
     categories: [
       { name: 'Business — audit delivery (8h)', taskIds: ['sp6-biz-audit-delivery'] },
@@ -782,7 +782,7 @@ const SPRINT_WEEKS = [
       { name: 'Business — pipeline (2h)', taskIds: ['sp6-biz-pipeline'] }
     ]
   },
-  { sprintNum: 7, title: 'Pipeline Polish + Travel Prep', dates: 'Jun 9–15, 2026', hours: '10 hours', isShortWeek: false,
+  { sprintNum: 7, title: 'Pipeline Polish + Travel Prep', dates: 'Jun 8–14, 2026', hours: '10 hours', isShortWeek: false,
     critical: null,
     categories: [
       { name: 'Business — deliverable polish (4h)', taskIds: ['sp7-biz-deliverable-polish'] },
